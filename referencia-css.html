@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guía de Referencia CSS - CodeLatino Editor</title>
+  <style>
+    :root {
+      --bg-color: #121212;
+      --text-color: #f0f0f0;
+      --highlight-color: #00ffd0;
+      --block-bg: #1e1e1e;
+      --block-border: #333;
+      --header-bg: #2c2c2c;
+      --button-bg: #00b894;
+      --button-hover-bg: #019875;
+      --accent-color: #6c5ce7;
+      --css-property: #ff79c6;
+      --css-value: #8be9fd;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    header {
+      background: var(--header-bg);
+      padding: 20px 0;
+      border-bottom: 2px solid var(--highlight-color);
+      margin-bottom: 30px;
+    }
+
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    h1 {
+      color: var(--highlight-color);
+      font-size: 2.5rem;
+    }
+
+    .subtitle {
+      font-size: 1.2rem;
+      opacity: 0.8;
+    }
+
+    .back-button {
+      background: var(--button-bg);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background 0.3s;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .back-button:hover {
+      background: var(--button-hover-bg);
+    }
+
+    .search-box {
+      margin: 20px 0;
+      position: relative;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 12px 20px;
+      background: var(--block-bg);
+      border: 1px solid var(--block-border);
+      border-radius: 5px;
+      color: var(--text-color);
+      font-size: 1rem;
+    }
+
+    .search-box input:focus {
+      outline: none;
+      border-color: var(--highlight-color);
+    }
+
+    .categories {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 30px;
+    }
+
+    .category-btn {
+      background: var(--block-bg);
+      border: 1px solid var(--block-border);
+      color: var(--text-color);
+      padding: 8px 15px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .category-btn.active, .category-btn:hover {
+      background: var(--button-bg);
+      color: white;
+    }
+
+    .reference-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 20px;
+    }
+
+    .reference-card {
+      background: var(--block-bg);
+      border: 1px solid var(--block-border);
+      border-radius: 8px;
+      padding: 20px;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .reference-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      border-bottom: 1px solid var(--block-border);
+      padding-bottom: 10px;
+    }
+
+    .property-name {
+      color: var(--css-property);
+      font-weight: bold;
+      font-size: 1.3rem;
+      font-family: monospace;
+    }
+
+    .copy-btn {
+      background: var(--accent-color);
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 3px;
+      cursor: pointer;
+      font-size: 0.8rem;
+    }
+
+    .card-content {
+      margin-bottom: 15px;
+    }
+
+    .description {
+      margin-bottom: 15px;
+    }
+
+    .syntax {
+      background: #2a2a2a;
+      padding: 10px;
+      border-radius: 5px;
+      font-family: monospace;
+      font-size: 0.9rem;
+      margin: 10px 0;
+      border-left: 3px solid var(--highlight-color);
+    }
+
+    .example {
+      background: #2a2a2a;
+      padding: 15px;
+      border-radius: 5px;
+      font-family: monospace;
+      font-size: 0.9rem;
+      margin: 10px 0;
+    }
+
+    .example-css {
+      color: var(--css-property);
+    }
+
+    .example-value {
+      color: var(--css-value);
+    }
+
+    .values-list {
+      margin-top: 10px;
+    }
+
+    .value-item {
+      display: flex;
+      justify-content: space-between;
+      margin: 5px 0;
+      padding: 5px;
+      background: #252525;
+      border-radius: 3px;
+    }
+
+    .value-name {
+      color: var(--css-value);
+      font-family: monospace;
+    }
+
+    .no-results {
+      text-align: center;
+      padding: 40px;
+      grid-column: 1 / -1;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 50px;
+      padding: 20px;
+      border-top: 1px solid var(--block-border);
+    }
+
+    .compatibility {
+      display: inline-block;
+      background: #444;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-size: 0.8rem;
+      margin-left: 10px;
+    }
+
+    @media (max-width: 768px) {
+      .reference-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .header-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="header-content">
+        <div>
+          <h1>Guía de Referencia CSS</h1>
+          <p class="subtitle">CodeLatino Editor - Todas las propiedades disponibles en español</p>
+        </div>
+        <a href="go:editor" class="back-button">Volver al Editor</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="Buscar propiedades o valores...">
+    </div>
+
+    <div class="categories">
+      <button class="category-btn active" data-category="all">Todas</button>
+      <button class="category-btn" data-category="texto">Texto</button>
+      <button class="category-btn" data-category="fondo">Fondo</button>
+      <button class="category-btn" data-category="caja">Modelo de Caja</button>
+      <button class="category-btn" data-category="flexbox">Flexbox</button>
+      <button class="category-btn" data-category="grid">Grid</button>
+      <button class="category-btn" data-category="posicion">Posición</button>
+      <button class="category-btn" data-category="animacion">Animación</button>
+    </div>
+
+    <div class="reference-grid" id="referenceGrid">
+      <!-- Las tarjetas de referencia se generarán con JavaScript -->
+    </div>
+  </div>
+
+  <footer>
+    <div class="container">
+      <p>CodeLatino Editor - V6.9 | Guía de Referencia CSS</p>
+    </div>
+  </footer>
+
+  <script>
+    // Datos de referencia CSS
+    const cssReference = [
+      {
+        property: "color de texto",
+        category: "texto",
+        description: "Define el color del texto",
+        syntax: "color de texto: valor;",
+        example: `estilo para "mi-elemento" {
+  color de texto: rojo;
+}`,
+        values: [
+          { name: "rojo", description: "Color rojo" },
+          { name: "#ff0000", description: "Color rojo en hexadecimal" },
+          { name: "rgb(255, 0, 0)", description: "Color rojo en RGB" },
+          { name: "var(--mi-color)", description: "Variable CSS" }
+        ]
+      },
+      {
+        property: "tamaño de fuente",
+        category: "texto",
+        description: "Define el tamaño de la fuente",
+        syntax: "tamaño de fuente: valor;",
+        example: `estilo para "titulo" {
+  tamaño de fuente: 24 píxeles;
+}`,
+        values: [
+          { name: "16 píxeles", description: "Tamaño fijo en píxeles" },
+          { name: "1.5 rem", description: "Tamaño relativo" },
+          { name: "120%", description: "Porcentaje del tamaño padre" },
+          { name: "grande", description: "Tamaño predefinido" }
+        ]
+      },
+      {
+        property: "tipo de letra",
+        category: "texto",
+        description: "Define la familia tipográfica",
+        syntax: "tipo de letra: valor;",
+        example: `estilo para cuerpo {
+  tipo de letra: "Arial, sans-serif";
+}`,
+        values: [
+          { name: "Arial, sans-serif", description: "Fuente específica con fallback" },
+          { name: "'Times New Roman', serif", description: "Fuente serif" },
+          { name: "monospace", description: "Fuente monoespaciada" }
+        ]
+      },
+      {
+        property: "alinear texto",
+        category: "texto",
+        description: "Alineación horizontal del texto",
+        syntax: "alinear texto: valor;",
+        example: `estilo para párrafo {
+  alinear texto: centrado;
+}`,
+        values: [
+          { name: "izquierda", description: "Alineación a la izquierda" },
+          { name: "derecha", description: "Alineación a la derecha" },
+          { name: "centrado", description: "Centrado" },
+          { name: "justificado", description: "Texto justificado" }
+        ]
+      },
+      {
+        property: "color de fondo",
+        category: "fondo",
+        description: "Define el color de fondo",
+        syntax: "color de fondo: valor;",
+        example: `estilo para cabecera {
+  color de fondo: azul;
+}`,
+        values: [
+          { name: "transparente", description: "Fondo transparente" },
+          { name: "rojo", description: "Color nombrado" },
+          { name: "#ffffff", description: "Color hexadecimal" },
+          { name: "linear-gradient(rojo, azul)", description: "Degradado" }
+        ]
+      },
+      {
+        property: "imagen de fondo",
+        category: "fondo",
+        description: "Define una imagen de fondo",
+        syntax: "imagen de fondo: url('ruta');",
+        example: `estilo para hero {
+  imagen de fondo: url('fondo.jpg');
+}`,
+        values: [
+          { name: "url('imagen.jpg')", description: "Imagen desde archivo" },
+          { name: "none", description: "Sin imagen" },
+          { name: "linear-gradient()", description: "Degradado como fondo" }
+        ]
+      },
+      {
+        property: "margen",
+        category: "caja",
+        description: "Espacio exterior alrededor del elemento",
+        syntax: "margen: valor;",
+        example: `estilo para caja {
+  margen: 20 píxeles;
+}`,
+        values: [
+          { name: "auto", description: "Margen automático" },
+          { name: "10 píxeles", description: "Valor fijo" },
+          { name: "5%", description: "Porcentaje" },
+          { name: "10 píxeles 20 píxeles", description: "Vertical Horizontal" }
+        ]
+      },
+      {
+        property: "relleno",
+        category: "caja",
+        description: "Espacio interior del elemento",
+        syntax: "relleno: valor;",
+        example: `estilo para botón {
+  relleno: 10 píxeles 20 píxeles;
+}`,
+        values: [
+          { name: "0", description: "Sin relleno" },
+          { name: "15 píxeles", description: "Mismo relleno en todos lados" },
+          { name: "10 píxeles 5 píxeles", description: "Arriba/Abajo Izquierda/Derecha" }
+        ]
+      },
+      {
+        property: "ancho",
+        category: "caja",
+        description: "Define el ancho del elemento",
+        syntax: "ancho: valor;",
+        example: `estilo para contenedor {
+  ancho: 100%;
+}`,
+        values: [
+          { name: "auto", description: "Ancho automático" },
+          { name: "300 píxeles", description: "Ancho fijo" },
+          { name: "50%", description: "Porcentaje del contenedor" },
+          { name: "100 vista ancho", description: "Ancho relativo a la ventana" }
+        ]
+      },
+      {
+        property: "alto",
+        category: "caja",
+        description: "Define el alto del elemento",
+        syntax: "alto: valor;",
+        example: `estilo para sección {
+  alto: 500 píxeles;
+}`,
+        values: [
+          { name: "auto", description: "Alto automático" },
+          { name: "200 píxeles", description: "Alto fijo" },
+          { name: "100 vista altura", description: "Alto relativo a la ventana" }
+        ]
+      },
+      {
+        property: "mostrar como",
+        category: "caja",
+        description: "Define el tipo de visualización",
+        syntax: "mostrar como: valor;",
+        example: `estilo para navegación {
+  mostrar como: flex;
+}`,
+        values: [
+          { name: "bloque", description: "Elemento de bloque" },
+          { name: "en línea", description: "Elemento en línea" },
+          { name: "flex", description: "Contenedor flex" },
+          { name: "grilla", description: "Contenedor grid" },
+          { name: "none", description: "Ocultar elemento" }
+        ]
+      },
+      {
+        property: "alinear horizontal",
+        category: "flexbox",
+        description: "Alineación horizontal en flexbox (justify-content)",
+        syntax: "alinear horizontal: valor;",
+        example: `estilo para contenedor-flex {
+  mostrar como: flex;
+  alinear horizontal: espacio entre;
+}`,
+        values: [
+          { name: "flex inicio", description: "Al inicio" },
+          { name: "flex fin", description: "Al final" },
+          { name: "centro", description: "Centrado" },
+          { name: "espacio entre", description: "Espacio entre elementos" },
+          { name: "espacio alrededor", description: "Espacio alrededor" }
+        ]
+      },
+      {
+        property: "alinear vertical",
+        category: "flexbox",
+        description: "Alineación vertical en flexbox (align-items)",
+        syntax: "alinear vertical: valor;",
+        example: `estilo para contenedor-flex {
+  mostrar como: flex;
+  alinear vertical: centro;
+}`,
+        values: [
+          { name: "estirado", description: "Estirar elementos" },
+          { name: "flex inicio", description: "Al inicio" },
+          { name: "flex fin", description: "Al final" },
+          { name: "centro", description: "Centrado" }
+        ]
+      },
+      {
+        property: "dirección de flex",
+        category: "flexbox",
+        description: "Dirección de los elementos flex",
+        syntax: "dirección de flex: valor;",
+        example: `estilo para contenedor-flex {
+  mostrar como: flex;
+  dirección de flex: columna;
+}`,
+        values: [
+          { name: "fila", description: "Horizontal (por defecto)" },
+          { name: "columna", description: "Vertical" },
+          { name: "fila reversa", description: "Horizontal invertido" },
+          { name: "columna reversa", description: "Vertical invertido" }
+        ]
+      },
+      {
+        property: "columnas de grilla",
+        category: "grid",
+        description: "Define las columnas en CSS Grid",
+        syntax: "columnas de grilla: valor;",
+        example: `estilo para contenedor-grid {
+  mostrar como: grilla;
+  columnas de grilla: repetir(3, 1fr);
+}`,
+        values: [
+          { name: "1fr", description: "Una columna flexible" },
+          { name: "repetir(3, 1fr)", description: "Tres columnas iguales" },
+          { name: "200 píxeles 1fr", description: "Fija y flexible" },
+          { name: "auto", description: "Automático" }
+        ]
+      },
+      {
+        property: "filas de grilla",
+        category: "grid",
+        description: "Define las filas en CSS Grid",
+        syntax: "filas de grilla: valor;",
+        example: `estilo para contenedor-grid {
+  mostrar como: grilla;
+  filas de grilla: 100 píxeles auto;
+}`,
+        values: [
+          { name: "auto", description: "Automático" },
+          { name: "100 píxeles", description: "Fijo" },
+          { name: "1fr", description: "Flexible" },
+          { name: "minmax(100 píxeles, auto)", description: "Rango mínimo-máximo" }
+        ]
+      },
+      {
+        property: "posición",
+        category: "posicion",
+        description: "Define el método de posicionamiento",
+        syntax: "posición: valor;",
+        example: `estilo para menú-flotante {
+  posición: fija;
+  arriba: 0;
+  derecha: 0;
+}`,
+        values: [
+          { name: "estática", description: "Posición normal (por defecto)" },
+          { name: "relativa", description: "Relativa a su posición normal" },
+          { name: "absoluta", description: "Relativa al contenedor posicionado" },
+          { name: "fija", description: "Relativa a la ventana" }
+        ]
+      },
+      {
+        property: "arriba",
+        category: "posicion",
+        description: "Distancia desde el borde superior",
+        syntax: "arriba: valor;",
+        example: `estilo para elemento {
+  posición: absoluta;
+  arriba: 50 píxeles;
+}`,
+        values: [
+          { name: "0", description: "En el borde superior" },
+          { name: "50 píxeles", description: "Distancia fija" },
+          { name: "10%", description: "Porcentaje" },
+          { name: "auto", description: "Automático" }
+        ]
+      },
+      {
+        property: "transición",
+        category: "animacion",
+        description: "Transición suave entre estados",
+        syntax: "transición: propiedad duración;",
+        example: `estilo para botón {
+  transición: color de fondo 0.3s;
+}`,
+        values: [
+          { name: "todo 0.3s", description: "Todas las propiedades" },
+          { name: "transformar 0.5s", description: "Propiedad específica" },
+          { name: "opacidad 0.2s facilidad", description: "Con función de timing" }
+        ]
+      },
+      {
+        property: "animación",
+        category: "animacion",
+        description: "Aplica una animación CSS",
+        syntax: "animación: nombre duración;",
+        example: `estilo para elemento {
+  animación: deslizar 1s infinito;
+}`,
+        values: [
+          { name: "nombre-animación 2s", description: "Animación básica" },
+          { name: "latir 1s infinito", description: "Repetir infinitamente" },
+          { name: "aparecer 0.5s facilidad en salida", description: "Con timing function" }
+        ]
+      },
+      {
+        property: "borde",
+        category: "caja",
+        description: "Define el borde del elemento",
+        syntax: "borde: ancho estilo color;",
+        example: `estilo para caja {
+  borde: 2 píxeles sólido negro;
+}`,
+        values: [
+          { name: "1 píxeles sólido gris", description: "Borde simple" },
+          { name: "2 píxeles punteado rojo", description: "Borde punteado" },
+          { name: "none", description: "Sin borde" }
+        ]
+      },
+      {
+        property: "radio de borde",
+        category: "caja",
+        description: "Redondea las esquinas del elemento",
+        syntax: "radio de borde: valor;",
+        example: `estilo para tarjeta {
+  radio de borde: 10 píxeles;
+}`,
+        values: [
+          { name: "0", description: "Sin redondeo" },
+          { name: "5 píxeles", description: "Redondeo pequeño" },
+          { name: "50%", description: "Círculo perfecto" },
+          { name: "10 píxeles 20 píxeles", description: "Elíptico" }
+        ]
+      },
+      {
+        property: "sombra de caja",
+        category: "caja",
+        description: "Aplica sombra al elemento",
+        syntax: "sombra de caja: x y desenfoque color;",
+        example: `estilo para tarjeta {
+  sombra de caja: 0 4 píxeles 8 píxeles rgba(0,0,0,0.1);
+}`,
+        values: [
+          { name: "2 píxeles 2 píxeles 5 píxeles gris", description: "Sombra básica" },
+          { name: "0 0 10 píxeles rojo", description: "Sombra difusa" },
+          { name: "inset 0 0 10 píxeles negro", description: "Sombra interna" },
+          { name: "none", description: "Sin sombra" }
+        ]
+      }
+    ];
+
+    // Función para generar las tarjetas de referencia
+    function generateReferenceCards(filteredData = cssReference) {
+      const grid = document.getElementById('referenceGrid');
+      
+      if (filteredData.length === 0) {
+        grid.innerHTML = '<div class="no-results">No se encontraron resultados para tu búsqueda.</div>';
+        return;
+      }
+      
+      grid.innerHTML = filteredData.map(item => `
+        <div class="reference-card" data-category="${item.category}">
+          <div class="card-header">
+            <span class="property-name">${item.property}</span>
+            <button class="copy-btn" data-code="${item.example}">Copiar</button>
+          </div>
+          <div class="card-content">
+            <div class="description">
+              <p>${item.description}</p>
+            </div>
+            <div class="syntax">
+              <strong>Sintaxis:</strong><br>
+              ${item.syntax}
+            </div>
+            <div class="example">
+              <strong>Ejemplo:</strong><br>
+              <span class="example-css">${item.example}</span>
+            </div>
+            ${item.values ? `
+            <div class="values-list">
+              <strong>Valores comunes:</strong>
+              ${item.values.map(value => `
+                <div class="value-item">
+                  <span class="value-name">${value.name}</span>
+                  <span>${value.description}</span>
+                </div>
+              `).join('')}
+            </div>
+            ` : ''}
+          </div>
+        </div>
+      `).join('');
+      
+      // Añadir event listeners a los botones de copiar
+      document.querySelectorAll('.copy-btn').forEach(button => {
+        button.addEventListener('click', function() {
+          const code = this.getAttribute('data-code');
+          navigator.clipboard.writeText(code)
+            .then(() => {
+              const originalText = this.textContent;
+              this.textContent = '¡Copiado!';
+              setTimeout(() => {
+                this.textContent = originalText;
+              }, 2000);
+            })
+            .catch(err => {
+              console.error('Error al copiar: ', err);
+            });
+        });
+      });
+    }
+
+    // Función para filtrar por categoría
+    function filterByCategory(category) {
+      if (category === 'all') {
+        generateReferenceCards();
+      } else {
+        const filtered = cssReference.filter(item => item.category === category);
+        generateReferenceCards(filtered);
+      }
+    }
+
+    // Función para buscar
+    function searchProperties(query) {
+      const filtered = cssReference.filter(item => 
+        item.property.toLowerCase().includes(query.toLowerCase()) ||
+        item.description.toLowerCase().includes(query.toLowerCase()) ||
+        (item.values && item.values.some(value => 
+          value.name.toLowerCase().includes(query.toLowerCase()) ||
+          value.description.toLowerCase().includes(query.toLowerCase())
+        ))
+      );
+      generateReferenceCards(filtered);
+    }
+
+    // Inicializar la página
+    document.addEventListener('DOMContentLoaded', function() {
+      // Generar tarjetas iniciales
+      generateReferenceCards();
+      
+      // Configurar botones de categoría
+      document.querySelectorAll('.category-btn').forEach(button => {
+        button.addEventListener('click', function() {
+          document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
+          this.classList.add('active');
+          filterByCategory(this.getAttribute('data-category'));
+        });
+      });
+      
+      // Configurar búsqueda
+      document.getElementById('searchInput').addEventListener('input', function() {
+        searchProperties(this.value);
+      });
+    });
+  </script>
+</body>
+</html>

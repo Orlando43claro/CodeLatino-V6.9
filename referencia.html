@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guía de Referencia HTML - CodeLatino Editor</title>
+  <style>
+    :root {
+      --bg-color: #121212;
+      --text-color: #f0f0f0;
+      --highlight-color: #00ffd0;
+      --block-bg: #1e1e1e;
+      --block-border: #333;
+      --header-bg: #2c2c2c;
+      --button-bg: #00b894;
+      --button-hover-bg: #019875;
+      --accent-color: #6c5ce7;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    header {
+      background: var(--header-bg);
+      padding: 20px 0;
+      border-bottom: 2px solid var(--highlight-color);
+      margin-bottom: 30px;
+    }
+
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    h1 {
+      color: var(--highlight-color);
+      font-size: 2.5rem;
+    }
+
+    .subtitle {
+      font-size: 1.2rem;
+      opacity: 0.8;
+    }
+
+    .back-button {
+      background: var(--button-bg);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background 0.3s;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .back-button:hover {
+      background: var(--button-hover-bg);
+    }
+
+    .search-box {
+      margin: 20px 0;
+      position: relative;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 12px 20px;
+      background: var(--block-bg);
+      border: 1px solid var(--block-border);
+      border-radius: 5px;
+      color: var(--text-color);
+      font-size: 1rem;
+    }
+
+    .search-box input:focus {
+      outline: none;
+      border-color: var(--highlight-color);
+    }
+
+    .categories {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 30px;
+    }
+
+    .category-btn {
+      background: var(--block-bg);
+      border: 1px solid var(--block-border);
+      color: var(--text-color);
+      padding: 8px 15px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .category-btn.active, .category-btn:hover {
+      background: var(--button-bg);
+      color: white;
+    }
+
+    .reference-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .reference-card {
+      background: var(--block-bg);
+      border: 1px solid var(--block-border);
+      border-radius: 8px;
+      padding: 20px;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .reference-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .tag-name {
+      color: var(--highlight-color);
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+
+    .copy-btn {
+      background: var(--accent-color);
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 3px;
+      cursor: pointer;
+      font-size: 0.8rem;
+    }
+
+    .card-content {
+      margin-bottom: 15px;
+    }
+
+    .example {
+      background: #2a2a2a;
+      padding: 10px;
+      border-radius: 5px;
+      font-family: monospace;
+      font-size: 0.9rem;
+      margin: 10px 0;
+      border-left: 3px solid var(--highlight-color);
+    }
+
+    .example-result {
+      background: #1a1a1a;
+      padding: 10px;
+      border-radius: 5px;
+      margin-top: 10px;
+    }
+
+    .no-results {
+      text-align: center;
+      padding: 40px;
+      grid-column: 1 / -1;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 50px;
+      padding: 20px;
+      border-top: 1px solid var(--block-border);
+    }
+
+    @media (max-width: 768px) {
+      .reference-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .header-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="header-content">
+        <div>
+          <h1>Guía de Referencia HTML</h1>
+          <p class="subtitle">CodeLatino Editor - Todas las etiquetas disponibles en español</p>
+        </div>
+        <a href="go:editor" class="back-button">Volver al Editor</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="Buscar etiquetas o funciones...">
+    </div>
+
+    <div class="categories">
+      <button class="category-btn active" data-category="all">Todas</button>
+      <button class="category-btn" data-category="estructura">Estructura</button>
+      <button class="category-btn" data-category="texto">Texto</button>
+      <button class="category-btn" data-category="multimedia">Multimedia</button>
+      <button class="category-btn" data-category="formularios">Formularios</button>
+      <button class="category-btn" data-category="listas">Listas</button>
+      <button class="category-btn" data-category="tablas">Tablas</button>
+    </div>
+
+    <div class="reference-grid" id="referenceGrid">
+      <!-- Las tarjetas de referencia se generarán con JavaScript -->
+    </div>
+  </div>
+
+  <footer>
+    <div class="container">
+      <p>CodeLatino Editor - V6.9 | Guía de Referencia HTML</p>
+    </div>
+  </footer>
+
+  <script>
+    // Datos de referencia HTML
+    const htmlReference = [
+      {
+        tag: "documento",
+        category: "estructura",
+        description: "Define el documento HTML completo",
+        syntax: "documento ... fin documento",
+        example: `documento
+  metadatos
+    titulo Mi Página fin titulo
+  fin metadatos
+  contenido
+    encabezado principal Hola Mundo fin encabezado principal
+  fin contenido
+fin documento`,
+        result: "<html><head><title>Mi Página</title></head><body><h1>Hola Mundo</h1></body></html>"
+      },
+      {
+        tag: "contenido",
+        category: "estructura",
+        description: "Contenedor principal del contenido visible",
+        syntax: "contenido ... fin contenido",
+        example: "contenido\n  parrafo Este es el contenido fin parrafo\nfin contenido",
+        result: "<body><p>Este es el contenido</p></body>"
+      },
+      {
+        tag: "metadatos",
+        category: "estructura",
+        description: "Contiene metadatos e información del documento",
+        syntax: "metadatos ... fin metadatos",
+        example: "metadatos\n  titulo Mi Sitio fin titulo\nfin metadatos",
+        result: "<head><title>Mi Sitio</title></head>"
+      },
+      {
+        tag: "titulo",
+        category: "estructura",
+        description: "Define el título de la página (aparece en la pestaña del navegador)",
+        syntax: "titulo ... fin titulo",
+        example: "titulo Mi Página Web fin titulo",
+        result: "<title>Mi Página Web</title>"
+      },
+      {
+        tag: "encabezado principal",
+        category: "texto",
+        description: "Encabezado de nivel 1 (más importante)",
+        syntax: "encabezado principal ... fin encabezado principal",
+        example: "encabezado principal Título Principal fin encabezado principal",
+        result: "<h1>Título Principal</h1>"
+      },
+      {
+        tag: "encabezado secundario",
+        category: "texto",
+        description: "Encabezado de nivel 2",
+        syntax: "encabezado secundario ... fin encabezado secundario",
+        example: "encabezado secundario Subtítulo fin encabezado secundario",
+        result: "<h2>Subtítulo</h2>"
+      },
+      {
+        tag: "parrafo",
+        category: "texto",
+        description: "Define un párrafo de texto",
+        syntax: "parrafo ... fin parrafo",
+        example: "parrafo Este es un párrafo de ejemplo. fin parrafo",
+        result: "<p>Este es un párrafo de ejemplo.</p>"
+      },
+      {
+        tag: "texto en negrita",
+        category: "texto",
+        description: "Texto en negrita para resaltar",
+        syntax: "texto en negrita ... fin texto en negrita",
+        example: "parrafo Esto es texto en negrita fin parrafo",
+        result: "<p>Esto es <strong>texto en negrita</strong></p>"
+      },
+      {
+        tag: "texto en cursiva",
+        category: "texto",
+        description: "Texto en cursiva para énfasis",
+        syntax: "texto en cursiva ... fin texto en cursiva",
+        example: "parrafo Esto es texto en cursiva fin parrafo",
+        result: "<p>Esto es <em>texto en cursiva</em></p>"
+      },
+      {
+        tag: "enlace",
+        category: "texto",
+        description: "Crea un enlace hipervínculo",
+        syntax: 'enlace a "url" ... fin enlace',
+        example: 'enlace a "https://ejemplo.com" Visitar sitio fin enlace',
+        result: '<a href="https://ejemplo.com">Visitar sitio</a>'
+      },
+      {
+        tag: "imagen fuente",
+        category: "multimedia",
+        description: "Inserta una imagen",
+        syntax: 'imagen fuente "ruta/imagen.jpg" alt "texto alternativo"',
+        example: 'imagen fuente "foto.jpg" alt "Una imagen de ejemplo"',
+        result: '<img src="foto.jpg" alt="Una imagen de ejemplo">'
+      },
+      {
+        tag: "lista desordenada",
+        category: "listas",
+        description: "Crea una lista sin orden específico",
+        syntax: "lista desordenada ... fin lista desordenada",
+        example: `lista desordenada
+  elemento de lista Primer elemento fin elemento de lista
+  elemento de lista Segundo elemento fin elemento de lista
+fin lista desordenada`,
+        result: "<ul><li>Primer elemento</li><li>Segundo elemento</li></ul>"
+      },
+      {
+        tag: "lista ordenada",
+        category: "listas",
+        description: "Crea una lista numerada",
+        syntax: "lista ordenada ... fin lista ordenada",
+        example: `lista ordenada
+  elemento de lista Primer paso fin elemento de lista
+  elemento de lista Segundo paso fin elemento de lista
+fin lista ordenada`,
+        result: "<ol><li>Primer paso</li><li>Segundo paso</li></ol>"
+      },
+      {
+        tag: "formulario",
+        category: "formularios",
+        description: "Crea un formulario para entrada de datos",
+        syntax: "formulario ... fin formulario",
+        example: `formulario
+  entrada de texto nombre "nombre" placeholder "Tu nombre"
+  boton de envío valor "Enviar"
+fin formulario`,
+        result: '<form><input type="text" name="nombre" placeholder="Tu nombre"><input type="submit" value="Enviar"></form>'
+      },
+      {
+        tag: "division",
+        category: "estructura",
+        description: "Contenedor genérico para agrupar elementos",
+        syntax: 'division clase "mi-clase" ... fin division',
+        example: 'division clase "contenedor"\n  parrafo Contenido fin parrafo\nfin division',
+        result: '<div class="contenedor"><p>Contenido</p></div>'
+      },
+      {
+        tag: "cabecera",
+        category: "estructura",
+        description: "Define la cabecera de una sección o página",
+        syntax: "cabecera ... fin cabecera",
+        example: "cabecera\n  encabezado principal Mi Sitio fin encabezado principal\nfin cabecera",
+        result: "<header><h1>Mi Sitio</h1></header>"
+      },
+      {
+        tag: "pie",
+        category: "estructura",
+        description: "Define el pie de página",
+        syntax: "pie ... fin pie",
+        example: "pie\n  parrafo Derechos reservados 2023 fin parrafo\nfin pie",
+        result: "<footer><p>Derechos reservados 2023</p></footer>"
+      },
+      {
+        tag: "seccion",
+        category: "estructura",
+        description: "Define una sección temática del contenido",
+        syntax: "seccion ... fin seccion",
+        example: "seccion\n  encabezado secundario Acerca de fin encabezado secundario\n  parrafo Información sobre nosotros fin parrafo\nfin seccion",
+        result: "<section><h2>Acerca de</h2><p>Información sobre nosotros</p></section>"
+      },
+      {
+        tag: "boton",
+        category: "formularios",
+        description: "Crea un botón clickeable",
+        syntax: "boton ... fin boton",
+        example: "boton Hacer clic aquí fin boton",
+        result: "<button>Hacer clic aquí</button>"
+      },
+      {
+        tag: "tabla",
+        category: "tablas",
+        description: "Crea una tabla para mostrar datos tabulares",
+        syntax: "tabla ... fin tabla",
+        example: `tabla
+  encabezado de tabla
+    fila de tabla
+      título de tabla Nombre fin título de tabla
+      título de tabla Edad fin título de tabla
+    fin fila de tabla
+  fin encabezado de tabla
+  cuerpo de tabla
+    fila de tabla
+      celda de tabla Juan fin celda de tabla
+      celda de tabla 25 fin celda de tabla
+    fin fila de tabla
+  fin cuerpo de tabla
+fin tabla`,
+        result: "<table><thead><tr><th>Nombre</th><th>Edad</th></tr></thead><tbody><tr><td>Juan</td><td>25</td></tr></tbody></table>"
+      }
+    ];
+
+    // Función para generar las tarjetas de referencia
+    function generateReferenceCards(filteredData = htmlReference) {
+      const grid = document.getElementById('referenceGrid');
+      
+      if (filteredData.length === 0) {
+        grid.innerHTML = '<div class="no-results">No se encontraron resultados para tu búsqueda.</div>';
+        return;
+      }
+      
+      grid.innerHTML = filteredData.map(item => `
+        <div class="reference-card" data-category="${item.category}">
+          <div class="card-header">
+            <span class="tag-name">${item.tag}</span>
+            <button class="copy-btn" data-code="${item.example}">Copiar</button>
+          </div>
+          <div class="card-content">
+            <p>${item.description}</p>
+            <div class="example">
+              <strong>Sintaxis:</strong><br>
+              ${item.syntax}
+            </div>
+            <div class="example">
+              <strong>Ejemplo:</strong><br>
+              ${item.example}
+            </div>
+            <div class="example-result">
+              <strong>Resultado:</strong><br>
+              ${item.result}
+            </div>
+          </div>
+        </div>
+      `).join('');
+      
+      // Añadir event listeners a los botones de copiar
+      document.querySelectorAll('.copy-btn').forEach(button => {
+        button.addEventListener('click', function() {
+          const code = this.getAttribute('data-code');
+          navigator.clipboard.writeText(code)
+            .then(() => {
+              const originalText = this.textContent;
+              this.textContent = '¡Copiado!';
+              setTimeout(() => {
+                this.textContent = originalText;
+              }, 2000);
+            })
+            .catch(err => {
+              console.error('Error al copiar: ', err);
+            });
+        });
+      });
+    }
+
+    // Función para filtrar por categoría
+    function filterByCategory(category) {
+      if (category === 'all') {
+        generateReferenceCards();
+      } else {
+        const filtered = htmlReference.filter(item => item.category === category);
+        generateReferenceCards(filtered);
+      }
+    }
+
+    // Función para buscar
+    function searchTags(query) {
+      const filtered = htmlReference.filter(item => 
+        item.tag.toLowerCase().includes(query.toLowerCase()) ||
+        item.description.toLowerCase().includes(query.toLowerCase()) ||
+        item.example.toLowerCase().includes(query.toLowerCase())
+      );
+      generateReferenceCards(filtered);
+    }
+
+    // Inicializar la página
+    document.addEventListener('DOMContentLoaded', function() {
+      // Generar tarjetas iniciales
+      generateReferenceCards();
+      
+      // Configurar botones de categoría
+      document.querySelectorAll('.category-btn').forEach(button => {
+        button.addEventListener('click', function() {
+          document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
+          this.classList.add('active');
+          filterByCategory(this.getAttribute('data-category'));
+        });
+      });
+      
+      // Configurar búsqueda
+      document.getElementById('searchInput').addEventListener('input', function() {
+        searchTags(this.value);
+      });
+    });
+  </script>
+</body>
+</html>

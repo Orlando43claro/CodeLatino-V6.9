@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guía de Referencia JavaScript - CodeLatino Editor</title>
+  <style>
+    :root {
+      --bg-color: #121212;
+      --text-color: #f0f0f0;
+      --highlight-color: #00ffd0;
+      --block-bg: #1e1e1e;
+      --block-border: #333;
+      --header-bg: #2c2c2c;
+      --button-bg: #00b894;
+      --button-hover-bg: #019875;
+      --accent-color: #6c5ce7;
+      --js-keyword: #ff79c6;
+      --js-function: #50fa7b;
+      --js-variable: #8be9fd;
+      --js-string: #f1fa8c;
+      --js-comment: #6272a4;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    header {
+      background: var(--header-bg);
+      padding: 20px 0;
+      border-bottom: 2px solid var(--highlight-color);
+      margin-bottom: 30px;
+    }
+
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    h1 {
+      color: var(--highlight-color);
+      font-size: 2.5rem;
+    }
+
+    .subtitle {
+      font-size: 1.2rem;
+      opacity: 0.8;
+    }
+
+    .back-button {
+      background: var(--button-bg);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background 0.3s;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .back-button:hover {
+      background: var(--button-hover-bg);
+    }
+
+    .search-box {
+      margin: 20px 0;
+      position: relative;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 12px 20px;
+      background: var(--block-bg);
+      border: 1px solid var(--block-border);
+      border-radius: 5px;
+      color: var(--text-color);
+      font-size: 1rem;
+    }
+
+    .search-box input:focus {
+      outline: none;
+      border-color: var(--highlight-color);
+    }
+
+    .categories {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 30px;
+    }
+
+    .category-btn {
+      background: var(--block-bg);
+      border: 1px solid var(--block-border);
+      color: var(--text-color);
+      padding: 8px 15px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .category-btn.active, .category-btn:hover {
+      background: var(--button-bg);
+      color: white;
+    }
+
+    .reference-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+      gap: 20px;
+    }
+
+    .reference-card {
+      background: var(--block-bg);
+      border: 1px solid var(--block-border);
+      border-radius: 8px;
+      padding: 20px;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .reference-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      border-bottom: 1px solid var(--block-border);
+      padding-bottom: 10px;
+    }
+
+    .function-name {
+      color: var(--js-function);
+      font-weight: bold;
+      font-size: 1.3rem;
+      font-family: monospace;
+    }
+
+    .keyword-name {
+      color: var(--js-keyword);
+      font-weight: bold;
+      font-size: 1.3rem;
+      font-family: monospace;
+    }
+
+    .copy-btn {
+      background: var(--accent-color);
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 3px;
+      cursor: pointer;
+      font-size: 0.8rem;
+    }
+
+    .card-content {
+      margin-bottom: 15px;
+    }
+
+    .description {
+      margin-bottom: 15px;
+    }
+
+    .syntax {
+      background: #2a2a2a;
+      padding: 10px;
+      border-radius: 5px;
+      font-family: monospace;
+      font-size: 0.9rem;
+      margin: 10px 0;
+      border-left: 3px solid var(--highlight-color);
+    }
+
+    .example {
+      background: #2a2a2a;
+      padding: 15px;
+      border-radius: 5px;
+      font-family: monospace;
+      font-size: 0.9rem;
+      margin: 10px 0;
+      white-space: pre-wrap;
+    }
+
+    .example .keyword { color: var(--js-keyword); }
+    .example .function { color: var(--js-function); }
+    .example .variable { color: var(--js-variable); }
+    .example .string { color: var(--js-string); }
+    .example .comment { color: var(--js-comment); font-style: italic; }
+
+    .parameters {
+      margin-top: 10px;
+    }
+
+    .parameter-item {
+      display: flex;
+      justify-content: space-between;
+      margin: 5px 0;
+      padding: 5px;
+      background: #252525;
+      border-radius: 3px;
+    }
+
+    .parameter-name {
+      color: var(--js-variable);
+      font-family: monospace;
+    }
+
+    .return-value {
+      background: #252525;
+      padding: 8px;
+      border-radius: 3px;
+      margin-top: 10px;
+      border-left: 3px solid var(--js-function);
+    }
+
+    .no-results {
+      text-align: center;
+      padding: 40px;
+      grid-column: 1 / -1;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 50px;
+      padding: 20px;
+      border-top: 1px solid var(--block-border);
+    }
+
+    @media (max-width: 768px) {
+      .reference-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .header-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 15px;
+      }
+    }
+
+    .code-highlight {
+      color: var(--js-keyword);
+      font-family: monospace;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="header-content">
+        <div>
+          <h1>Guía de Referencia JavaScript</h1>
+          <p class="subtitle">CodeLatino Editor - Todas las funciones y sintaxis disponibles en español</p>
+        </div>
+        <a href="go:editor" class="back-button">Volver al Editor</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="Buscar funciones, variables o conceptos...">
+    </div>
+
+    <div class="categories">
+      <button class="category-btn active" data-category="all">Todas</button>
+      <button class="category-btn" data-category="variables">Variables</button>
+      <button class="category-btn" data-category="funciones">Funciones</button>
+      <button class="category-btn" data-category="condicionales">Condicionales</button>
+      <button class="category-btn" data-category="bucles">Bucles</button>
+      <button class="category-btn" data-category="arrays">Arrays</button>
+      <button class="category-btn" data-category="dom">DOM</button>
+      <button class="category-btn" data-category="eventos">Eventos</button>
+      <button class="category-btn" data-category="clases">Clases</button>
+    </div>
+
+    <div class="reference-grid" id="referenceGrid">
+      <!-- Las tarjetas de referencia se generarán con JavaScript -->
+    </div>
+  </div>
+
+  <footer>
+    <div class="container">
+      <p>CodeLatino Editor - V6.9 | Guía de Referencia JavaScript</p>
+    </div>
+  </footer>
+
+  <script>
+    // Datos de referencia JavaScript
+    const jsReference = [
+      {
+        name: "variable",
+        category: "variables",
+        type: "keyword",
+        description: "Declara una variable que puede ser reasignada",
+        syntax: "variable nombre = valor;",
+        example: `<span class="keyword">variable</span> <span class="variable">nombre</span> = <span class="string">"Juan"</span>;
+<span class="keyword">variable</span> <span class="variable">edad</span> = <span class="number">25</span>;
+<span class="keyword">variable</span> <span class="variable">activo</span> = <span class="keyword">verdadero</span>;`,
+        notes: "Las variables declaradas con 'variable' pueden cambiar su valor"
+      },
+      {
+        name: "constante",
+        category: "variables",
+        type: "keyword",
+        description: "Declara una constante que no puede ser reasignada",
+        syntax: "constante nombre = valor;",
+        example: `<span class="keyword">constante</span> <span class="variable">PI</span> = <span class="number">3.1416</span>;
+<span class="keyword">constante</span> <span class="variable">URL_BASE</span> = <span class="string">"https://api.ejemplo.com"</span>;`,
+        notes: "Las constantes deben inicializarse con un valor y no pueden cambiar"
+      },
+      {
+        name: "función",
+        category: "funciones",
+        type: "keyword",
+        description: "Declara una función reusable",
+        syntax: "función nombre(parámetros) { ... }",
+        example: `<span class="keyword">función</span> <span class="function">saludar</span>(<span class="variable">nombre</span>) {
+  <span class="keyword">retornar</span> <span class="string">"Hola, "</span> + <span class="variable">nombre</span>;
+}
+
+<span class="comment">// Llamar la función</span>
+<span class="variable">mensaje</span> = <span class="function">saludar</span>(<span class="string">"María"</span>);
+<span class="function">escribir</span>(<span class="variable">mensaje</span>); <span class="comment">// "Hola, María"</span>`,
+        parameters: [
+          { name: "parámetros", description: "Valores que recibe la función (opcionales)" }
+        ],
+        return: "Valor especificado con 'retornar'"
+      },
+      {
+        name: "si",
+        category: "condicionales",
+        type: "keyword",
+        description: "Ejecuta código si una condición es verdadera",
+        syntax: "si (condición) { ... }",
+        example: `<span class="keyword">variable</span> <span class="variable">edad</span> = <span class="number">18</span>;
+
+<span class="keyword">si</span> (<span class="variable">edad</span> >= <span class="number">18</span>) {
+  <span class="function">escribir</span>(<span class="string">"Eres mayor de edad"</span>);
+}`,
+        notes: "La condición debe evaluarse como verdadero o falso"
+      },
+      {
+        name: "sino si",
+        category: "condicionales",
+        type: "keyword",
+        description: "Ejecuta código si la condición anterior es falsa y esta es verdadera",
+        syntax: "sino si (condición) { ... }",
+        example: `<span class="keyword">variable</span> <span class="variable">nota</span> = <span class="number">85</span>;
+
+<span class="keyword">si</span> (<span class="variable">nota</span> >= <span class="number">90</span>) {
+  <span class="function">escribir</span>(<span class="string">"Excelente"</span>);
+} <span class="keyword">sino si</span> (<span class="variable">nota</span> >= <span class="number">70</span>) {
+  <span class="function">escribir</span>(<span class="string">"Bueno"</span>);
+} <span class="keyword">sino</span> {
+  <span class="function">escribir</span>(<span class="string">"Necesitas mejorar"</span>);
+}`,
+        notes: "Puede haber múltiples 'sino si' después de un 'si'"
+      },
+      {
+        name: "sino",
+        category: "condicionales",
+        type: "keyword",
+        description: "Ejecuta código si todas las condiciones anteriores son falsas",
+        syntax: "sino { ... }",
+        example: `<span class="keyword">si</span> (<span class="variable">llueve</span>) {
+  <span class="function">escribir</span>(<span class="string">"Lleva paraguas"</span>);
+} <span class="keyword">sino</span> {
+  <span class="function">escribir</span>(<span class="string">"Día soleado"</span>);
+}`,
+        notes: "Opcional, debe ir después de 'si' o 'sino si'"
+      },
+      {
+        name: "para",
+        category: "bucles",
+        type: "keyword",
+        description: "Bucle que se ejecuta un número específico de veces",
+        syntax: "para (inicio; condición; incremento) { ... }",
+        example: `<span class="comment">// Contar del 1 al 5</span>
+<span class="keyword">para</span> (<span class="keyword">variable</span> <span class="variable">i</span> = <span class="number">1</span>; <span class="variable">i</span> <= <span class="number">5</span>; <span class="variable">i</span>++) {
+  <span class="function">escribir</span>(<span class="variable">i</span>);
+}`,
+        parameters: [
+          { name: "inicio", description: "Inicialización del contador" },
+          { name: "condición", description: "Condición para continuar" },
+          { name: "incremento", description: "Cómo cambia el contador en cada iteración" }
+        ]
+      },
+      {
+        name: "mientras",
+        category: "bucles",
+        type: "keyword",
+        description: "Bucle que se ejecuta mientras una condición sea verdadera",
+        syntax: "mientras (condición) { ... }",
+        example: `<span class="keyword">variable</span> <span class="variable">contador</span> = <span class="number">0</span>;
+
+<span class="keyword">mientras</span> (<span class="variable">contador</span> < <span class="number">5</span>) {
+  <span class="function">escribir</span>(<span class="string">"Contador: "</span> + <span class="variable">contador</span>);
+  <span class="variable">contador</span>++;
+}`,
+        notes: "Cuidado con bucles infinitos - asegurar que la condición eventualmente sea falsa"
+      },
+      {
+        name: "escribir",
+        category: "funciones",
+        type: "function",
+        description: "Muestra mensajes en la consola del navegador",
+        syntax: "escribir(mensaje);",
+        example: `<span class="function">escribir</span>(<span class="string">"Hola Mundo"</span>);
+<span class="function">escribir</span>(<span class="string">"El resultado es:"</span>, <span class="variable">resultado</span>);
+<span class="function">escribir</span>(<span class="string">"Usuario:"</span>, <span class="variable">usuario</span>.<span class="variable">nombre</span>, <span class="string">"Edad:"</span>, <span class="variable">usuario</span>.<span class="variable">edad</span>);`,
+        parameters: [
+          { name: "mensaje", description: "Texto o variable a mostrar" }
+        ],
+        notes: "Muy útil para depurar código"
+      },
+      {
+        name: "alerta",
+        category: "funciones",
+        type: "function",
+        description: "Muestra un mensaje emergente al usuario",
+        syntax: "alerta(mensaje);",
+        example: `<span class="function">alerta</span>(<span class="string">"Bienvenido a mi sitio web"</span>);
+<span class="function">alerta</span>(<span class="string">"Error: Campo requerido"</span>);`,
+        parameters: [
+          { name: "mensaje", description: "Texto a mostrar en la alerta" }
+        ],
+        notes: "Interrumpe la ejecución hasta que el usuario cierre la alerta"
+      },
+      {
+        name: "obtener por id",
+        category: "dom",
+        type: "function",
+        description: "Selecciona un elemento del DOM por su ID",
+        syntax: "obtener por id('id-del-elemento');",
+        example: `<span class="comment">// HTML: <div id="miDiv">Hola</div></span>
+<span class="keyword">variable</span> <span class="variable">elemento</span> = <span class="function">obtener por id</span>(<span class="string">"miDiv"</span>);
+<span class="variable">elemento</span>.<span class="variable">texto interior</span> = <span class="string">"Nuevo texto"</span>;`,
+        parameters: [
+          { name: "id", description: "ID del elemento a seleccionar" }
+        ],
+        return: "Elemento del DOM o nulo si no se encuentra"
+      },
+      {
+        name: "agregar evento",
+        category: "eventos",
+        type: "function",
+        description: "Añade un detector de eventos a un elemento",
+        syntax: "elemento.agregar evento('evento', función);",
+        example: `<span class="keyword">variable</span> <span class="variable">boton</span> = <span class="function">obtener por id</span>(<span class="string">"miBoton"</span>);
+
+<span class="variable">boton</span>.<span class="function">agregar evento</span>(<span class="string">"al hacer clic"</span>, <span class="keyword">función</span>() {
+  <span class="function">escribir</span>(<span class="string">"Botón clickeado"</span>);
+});`,
+        parameters: [
+          { name: "evento", description: "Tipo de evento (al hacer clic, al pasar, etc.)" },
+          { name: "función", description: "Función a ejecutar cuando ocurre el evento" }
+        ]
+      },
+      {
+        name: "longitud",
+        category: "arrays",
+        type: "property",
+        description: "Obtiene la cantidad de elementos en un array",
+        syntax: "array.longitud;",
+        example: `<span class="keyword">variable</span> <span class="variable">frutas</span> = [<span class="string">"manzana"</span>, <span class="string">"banana"</span>, <span class="string">"naranja"</span>];
+<span class="function">escribir</span>(<span class="variable">frutas</span>.<span class="variable">longitud</span>); <span class="comment">// 3</span>`,
+        notes: "Propiedad de solo lectura"
+      },
+      {
+        name: "agregar",
+        category: "arrays",
+        type: "function",
+        description: "Añade uno o más elementos al final de un array",
+        syntax: "array.agregar(elemento1, elemento2, ...);",
+        example: `<span class="keyword">variable</span> <span class="variable">numeros</span> = [<span class="number">1</span>, <span class="number">2</span>];
+<span class="variable">numeros</span>.<span class="function">agregar</span>(<span class="number">3</span>, <span class="number">4</span>);
+<span class="function">escribir</span>(<span class="variable">numeros</span>); <span class="comment">// [1, 2, 3, 4]</span>`,
+        parameters: [
+          { name: "elementos", description: "Elementos a añadir al array" }
+        ],
+        return: "Nueva longitud del array"
+      },
+      {
+        name: "mapear",
+        category: "arrays",
+        type: "function",
+        description: "Crea un nuevo array transformando cada elemento",
+        syntax: "array.mapear(función);",
+        example: `<span class="keyword">variable</span> <span class="variable">numeros</span> = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>];
+<span class="keyword">variable</span> <span class="variable">doble</span> = <span class="variable">numeros</span>.<span class="function">mapear</span>(<span class="keyword">función</span>(<span class="variable">num</span>) {
+  <span class="keyword">retornar</span> <span class="variable">num</span> * <span class="number">2</span>;
+});
+<span class="function">escribir</span>(<span class="variable">doble</span>); <span class="comment">// [2, 4, 6]</span>`,
+        parameters: [
+          { name: "función", description: "Función que transforma cada elemento" }
+        ],
+        return: "Nuevo array con los elementos transformados"
+      },
+      {
+        name: "filtrar",
+        category: "arrays",
+        type: "function",
+        description: "Crea un nuevo array con elementos que pasan una prueba",
+        syntax: "array.filtrar(función);",
+        example: `<span class="keyword">variable</span> <span class="variable">numeros</span> = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>];
+<span class="keyword">variable</span> <span class="variable">pares</span> = <span class="variable">numeros</span>.<span class="function">filtrar</span>(<span class="keyword">función</span>(<span class="variable">num</span>) {
+  <span class="keyword">retornar</span> <span class="variable">num</span> % <span class="number">2</span> === <span class="number">0</span>;
+});
+<span class="function">escribir</span>(<span class="variable">pares</span>); <span class="comment">// [2, 4]</span>`,
+        parameters: [
+          { name: "función", description: "Función que prueba cada elemento" }
+        ],
+        return: "Nuevo array con elementos que pasan la prueba"
+      },
+      {
+        name: "clase",
+        category: "clases",
+        type: "keyword",
+        description: "Define una clase (plantilla para crear objetos)",
+        syntax: "clase Nombre { ... }",
+        example: `<span class="keyword">clase</span> <span class="class">Persona</span> {
+  <span class="function">constructor</span>(<span class="variable">nombre</span>, <span class="variable">edad</span>) {
+    <span class="keyword">this</span>.<span class="variable">nombre</span> = <span class="variable">nombre</span>;
+    <span class="keyword">this</span>.<span class="variable">edad</span> = <span class="variable">edad</span>;
+  }
+  
+  <span class="function">saludar</span>() {
+    <span class="keyword">retornar</span> <span class="string">"Hola, soy "</span> + <span class="keyword">this</span>.<span class="variable">nombre</span>;
+  }
+}
+
+<span class="keyword">variable</span> <span class="variable">persona</span> = <span class="keyword">new</span> <span class="class">Persona</span>(<span class="string">"Ana"</span>, <span class="number">30</span>);
+<span class="function">escribir</span>(<span class="variable">persona</span>.<span class="function">saludar</span>());`,
+        notes: "Las clases son una forma de programación orientada a objetos"
+      },
+      {
+        name: "asincrónico",
+        category: "funciones",
+        type: "keyword",
+        description: "Declara una función asíncrona que devuelve una Promesa",
+        syntax: "asincrónico función nombre() { ... }",
+        example: `<span class="keyword">asincrónico</span> <span class="keyword">función</span> <span class="function">obtenerDatos</span>() {
+  <span class="keyword">variable</span> <span class="variable">respuesta</span> = <span class="keyword">await</span> <span class="function">fetch</span>(<span class="string">'https://api.ejemplo.com/datos'</span>);
+  <span class="keyword">variable</span> <span class="variable">datos</span> = <span class="keyword">await</span> <span class="variable">respuesta</span>.<span class="function">json</span>();
+  <span class="keyword">retornar</span> <span class="variable">datos</span>;
+}`,
+        notes: "Las funciones asíncronas permiten usar 'await' dentro de ellas"
+      },
+      {
+        name: "esperar",
+        category: "funciones",
+        type: "keyword",
+        description: "Pausa la ejecución hasta que una Promesa se resuelva",
+        syntax: "esperar promesa;",
+        example: `<span class="keyword">asincrónico</span> <span class="keyword">función</span> <span class="function">cargarUsuario</span>() {
+  <span class="keyword">try</span> {
+    <span class="keyword">variable</span> <span class="variable">usuario</span> = <span class="keyword">await</span> <span class="function">obtener por id</span>(<span class="string">"api/usuarios/1"</span>);
+    <span class="function">escribir</span>(<span class="variable">usuario</span>.<span class="variable">nombre</span>);
+  } <span class="keyword">catch</span> (<span class="variable">error</span>) {
+    <span class="function">escribir</span>(<span class="string">"Error: "</span> + <span class="variable">error</span>);
+  }
+}`,
+        notes: "Solo puede usarse dentro de funciones asíncronas"
+      },
+      {
+        name: "texto interior",
+        category: "dom",
+        type: "property",
+        description: "Obtiene o establece el texto visible de un elemento",
+        syntax: "elemento.texto interior = 'nuevo texto';",
+        example: `<span class="keyword">variable</span> <span class="variable">titulo</span> = <span class="function">obtener por id</span>(<span class="string">"titulo"</span>);
+<span class="variable">titulo</span>.<span class="variable">texto interior</span> = <span class="string">"Nuevo título"</span>;`,
+        notes: "Solo muestra texto, sin formato HTML"
+      },
+      {
+        name: "html interior",
+        category: "dom",
+        type: "property",
+        description: "Obtiene o establece el contenido HTML de un elemento",
+        syntax: "elemento.html interior = '<div>Contenido</div>';",
+        example: `<span class="keyword">variable</span> <span class="variable">contenedor</span> = <span class="function">obtener por id</span>(<span class="string">"contenedor"</span>);
+<span class="variable">contenedor</span>.<span class="variable">html interior</span> = <span class="string">'<span class="hljs-tag"><<span class="hljs-name">strong</span>></span>Texto importante<span class="hljs-tag"></<span class="hljs-name">strong</span>></span>'</span>;`,
+        notes: "Interpreta etiquetas HTML, puede ser vulnerable a XSS"
+      }
+    ];
+
+    // Función para generar las tarjetas de referencia
+    function generateReferenceCards(filteredData = jsReference) {
+      const grid = document.getElementById('referenceGrid');
+      
+      if (filteredData.length === 0) {
+        grid.innerHTML = '<div class="no-results">No se encontraron resultados para tu búsqueda.</div>';
+        return;
+      }
+      
+      grid.innerHTML = filteredData.map(item => `
+        <div class="reference-card" data-category="${item.category}">
+          <div class="card-header">
+            <span class="${item.type === 'function' ? 'function-name' : 'keyword-name'}">${item.name}</span>
+            <button class="copy-btn" data-code="${item.example.replace(/<[^>]*>/g, '')}">Copiar</button>
+          </div>
+          <div class="card-content">
+            <div class="description">
+              <p>${item.description}</p>
+            </div>
+            <div class="syntax">
+              <strong>Sintaxis:</strong><br>
+              ${item.syntax}
+            </div>
+            <div class="example">
+              <strong>Ejemplo:</strong><br>
+              ${item.example}
+            </div>
+            ${item.parameters ? `
+            <div class="parameters">
+              <strong>Parámetros:</strong>
+              ${item.parameters.map(param => `
+                <div class="parameter-item">
+                  <span class="parameter-name">${param.name}</span>
+                  <span>${param.description}</span>
+                </div>
+              `).join('')}
+            </div>
+            ` : ''}
+            ${item.return ? `
+            <div class="return-value">
+              <strong>Retorna:</strong> ${item.return}
+            </div>
+            ` : ''}
+            ${item.notes ? `
+            <div class="syntax" style="margin-top: 10px; background: #2a2a2a;">
+              <strong>Notas:</strong> ${item.notes}
+            </div>
+            ` : ''}
+          </div>
+        </div>
+      `).join('');
+      
+      // Añadir event listeners a los botones de copiar
+      document.querySelectorAll('.copy-btn').forEach(button => {
+        button.addEventListener('click', function() {
+          const code = this.getAttribute('data-code');
+          navigator.clipboard.writeText(code)
+            .then(() => {
+              const originalText = this.textContent;
+              this.textContent = '¡Copiado!';
+              setTimeout(() => {
+                this.textContent = originalText;
+              }, 2000);
+            })
+            .catch(err => {
+              console.error('Error al copiar: ', err);
+            });
+        });
+      });
+    }
+
+    // Función para filtrar por categoría
+    function filterByCategory(category) {
+      if (category === 'all') {
+        generateReferenceCards();
+      } else {
+        const filtered = jsReference.filter(item => item.category === category);
+        generateReferenceCards(filtered);
+      }
+    }
+
+    // Función para buscar
+    function searchItems(query) {
+      const filtered = jsReference.filter(item => 
+        item.name.toLowerCase().includes(query.toLowerCase()) ||
+        item.description.toLowerCase().includes(query.toLowerCase()) ||
+        (item.parameters && item.parameters.some(param => 
+          param.name.toLowerCase().includes(query.toLowerCase()) ||
+          param.description.toLowerCase().includes(query.toLowerCase())
+        )) ||
+        item.syntax.toLowerCase().includes(query.toLowerCase())
+      );
+      generateReferenceCards(filtered);
+    }
+
+    // Inicializar la página
+    document.addEventListener('DOMContentLoaded', function() {
+      // Generar tarjetas iniciales
+      generateReferenceCards();
+      
+      // Configurar botones de categoría
+      document.querySelectorAll('.category-btn').forEach(button => {
+        button.addEventListener('click', function() {
+          document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
+          this.classList.add('active');
+          filterByCategory(this.getAttribute('data-category'));
+        });
+      });
+      
+      // Configurar búsqueda
+      document.getElementById('searchInput').addEventListener('input', function() {
+        searchItems(this.value);
+      });
+    });
+  </script>
+</body>
+</html>
