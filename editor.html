@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Editor Web en Español - V6.9</title>
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/monokai.min.css">
+  
+  <style>
+    /* Estilos base del usuario, sin cambios significativos */
+    :root {
+      --bg-color: #121212;
+      --text-color: #f0f0f0;
+      --highlight-color: #00ffd0;
+      --block-bg: #1e1e1e;
+      --block-border: #333;
+      --header-bg: #2c2c2c;
+      --button-bg: #00b894;
+      --button-hover-bg: #019875;
+      --textarea-bg: #222;
+      --preview-bg: #fff;
+    }
+
+    body.light-theme {
+      --bg-color: #f0f0f0;
+      --text-color: #121212;
+      --highlight-color: #008f7a;
+      --block-bg: #e0e0e0;
+      --block-border: #ccc;
+      --header-bg: #d4d4d4;
+      --button-bg: #00b894;
+      --button-hover-bg: #019875;
+      --textarea-bg: #e9e9e9;
+      --preview-bg: #fff;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--block-bg);
+      padding: 10px 15px;
+      border-bottom: 1px solid var(--block-border);
+    }
+    .top-bar h1 {
+      font-size: 16px;
+      color: var(--highlight-color);
+    }
+    .top-bar .acciones {
+      display: flex;
+      gap: 8px;
+    }
+    .top-bar button {
+      font-size: 12px;
+      padding: 5px 8px;
+      border-radius: 3px;
+      background: var(--button-bg);
+      border: none;
+      cursor: pointer;
+      color: white;
+      transition: background 0.3s;
+    }
+    .top-bar button:hover { background: var(--button-hover-bg); }
+
+    .bloques {
+      display: flex;
+      flex: 1;
+      overflow-x: auto;
+      gap: 15px;
+      padding: 10px;
+    }
+    .bloque {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 320px;
+      background: var(--block-bg);
+      border: 1px solid var(--block-border);
+      border-radius: 5px;
+    }
+    .bloque-header {
+      background: var(--header-bg);
+      padding: 6px;
+      color: var(--highlight-color);
+      font-weight: bold;
+      text-align: center;
+    }
+    .borrador, .editor {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      padding: 6px;
+    }
+    .btns {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 5px;
+    }
+    .btns button {
+      flex: 1;
+      margin: 0 2px;
+      padding: 6px;
+      font-size: 12px;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+      background: var(--button-bg);
+      color: #fff;
+    }
+    .btns button:hover { background: var(--button-hover-bg); }
+
+    .preview-container {
+      flex: 1;
+      background: var(--preview-bg);
+      margin: 10px;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    .copiado-card {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: var(--block-bg);
+      color: var(--text-color);
+      padding: 10px 15px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      font-size: 14px;
+      opacity: 0;
+      transform: translateY(-20px);
+      transition: all 0.3s ease-in-out;
+      z-index: 9999;
+    }
+    .copiado-card.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    /* Estilos corregidos para CodeMirror */
+    .CodeMirror {
+      height: 100% !important;
+      font-size: 13px;
+      border-radius: 4px;
+      border: 1px solid var(--block-border);
+      flex: 1;
+    }
+    
+    .CodeMirror-wrap {
+      height: 100%;
+    }
+
+    .borrador .CodeMirror, .editor .CodeMirror {
+      min-height: 120px;
+    }
+
+    body.light-theme .CodeMirror-wrap {
+      background-color: var(--textarea-bg);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="top-bar">
+    <h1>🌐 CodeLatino Editor Web en Bilingüe - V6.9</h1>
+    <div class="acciones">
+      <button onclick="limpiarEditores()">Borrar Todo</button>
+      
+      <button onclick="toggleTheme()">Cambiar Tema</button>
+    </div>
+  </div>
+
+  <div class="bloques">
+    <div class="bloque">
+      <div class="bloque-header">HTML</div>
+      <div class="borrador">
+        <textarea id="borradorHtml" placeholder="Escribe HTML en español..."></textarea>
+        <div class="btns">
+          <button onclick="limpiarBorrador('html')">Borrar</button>
+        </div>
+      </div>
+      <div class="editor">
+        <textarea id="htmlCode" placeholder="HTML traducido..."></textarea>
+        <div class="btns">
+          <button onclick="copiarAlPortapapeles('html')">Copiar</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="bloque">
+      <div class="bloque-header">CSS</div>
+      <div class="borrador">
+        <textarea id="borradorCss" placeholder="Escribe CSS en español..."></textarea>
+        <div class="btns">
+          <button onclick="limpiarBorrador('css')">Borrar</button>
+        </div>
+      </div>
+      <div class="editor">
+        <textarea id="cssCode" placeholder="CSS traducido..."></textarea>
+        <div class="btns">
+          <button onclick="copiarAlPortapapeles('css')">Copiar</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="bloque">
+      <div class="bloque-header">JavaScript</div>
+      <div class="borrador">
+        <textarea id="borradorJs" placeholder="Escribe JS en español..."></textarea>
+        <div class="btns">
+          <button onclick="limpiarBorrador('js')">Borrar</button>
+        </div>
+      </div>
+      <div class="editor">
+        <textarea id="jsCode" placeholder="JS traducido..."></textarea>
+        <div class="btns">
+          <button onclick="copiarAlPortapapeles('js')">Copiar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="preview-container">
+    <iframe id="preview"></iframe>
+  </div>
+
+  <div id="copiadoCard" class="copiado-card"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/xml/xml.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/css/css.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/javascript/javascript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+  <script>
+    
+// ====================
+// Traductor de HTML mejorado
+// ====================
+function traducirHTML(texto) {
+  if (!texto || typeof texto !== 'string') return "";
+  
+  // Detección de errores básicos de cierre de etiquetas
+  const etiquetasCierre = ["documento", "metadatos", "titulo", "contenido", "cabecera", "navegacion", "pie", "seccion", "articulo", "aparte", "parrafo", "texto en negrita", "texto en cursiva", "texto subrayado", "enlace", "lista desordenada", "lista ordenada", "elemento de lista", "formulario", "etiqueta", "seleccion", "opcion", "video", "audio", "boton", "division", "contenedor", "entrada de texto", "area de texto", "marco", "lista"];
+  let errores = false;
+  for (const tag of etiquetasCierre) {
+    if (texto.includes(tag) && !texto.includes(`fin ${tag}`)) {
+      console.error(`Error de sintaxis: se encontró la etiqueta "${tag}" sin su correspondiente "fin ${tag}".`);
+      errores = true;
+    }
+  }
+  if (errores) return texto; // No traduce si hay errores para no generar código inválido
+
+  try {
+    return texto
+      .replace(/contenido\s*(?:clase\s*"(.*?)")?\s*(.*?)fin contenido/gs, (match, p1, p2) => {
+        let attrs = '';
+        if (p1) attrs += ` class="${p1}"`;
+        return `<body${attrs}>${p2}</body>`;
+      })
+      .replace(/documento\s*(.*?)fin documento/gs, "<html>$1</html>")
+      .replace(/metadatos\s*(.*?)fin metadatos/gs, "<head>$1</head>")
+      .replace(/titulo\s*(.*?)fin titulo/gs, "<title>$1</title>")
+      .replace(/cabecera\s*(.*?)fin cabecera/gs, "<header>$1</header>")
+      .replace(/navegacion\s*(.*?)fin navegacion/gs, "<nav>$1</nav>")
+      .replace(/pie\s*(.*?)fin pie/gs, "<footer>$1</footer>")
+      .replace(/seccion\s*(?:id\s*"(.*?)")?\s*(?:clase\s*"(.*?)")?\s*(.*?)fin seccion/gs, (match, p1, p2, p3) => {
+        let attrs = '';
+        if (p1) attrs += ` id="${p1}"`;
+        if (p2) attrs += ` class="${p2}"`;
+        return `<section${attrs}>${p3}</section>`;
+      })
+      .replace(/division\s*(?:id\s*"(.*?)")?\s*(?:clase\s*"(.*?)")?\s*(.*?)fin division/gs, (match, p1, p2, p3) => {
+        let attrs = '';
+        if (p1) attrs += ` id="${p1}"`;
+        if (p2) attrs += ` class="${p2}"`;
+        return `<div${attrs}>${p3}</div>`;
+      })
+      .replace(/contenedor\s*(?:id\s*"(.*?)")?\s*(?:clase\s*"(.*?)")?\s*(.*?)fin contenedor/gs, (match, p1, p2, p3) => {
+        let attrs = '';
+        if (p1) attrs += ` id="${p1}"`;
+        if (p2) attrs += ` class="${p2}"`;
+        return `<div class="container${p2 ? ' ' + p2 : ''}"${p1 ? ' id="' + p1 + '"' : ''}>${p3}</div>`;
+      })
+      .replace(/boton\s*(?:id\s*"(.*?)")?\s*([\s\S]*?)fin boton/gs, (match, p1, p2) => {
+          let attrs = '';
+          if (p1) attrs += ` id="${p1}"`;
+          return `<button${attrs}>${p2}</button>`;
+      })
+      .replace(/articulo\s*(.*?)fin articulo/gs, "<article>$1</article>")
+      .replace(/aparte\s*(.*?)fin aparte/gs, "<aside>$1</aside>")
+      .replace(/encabezado principal\s*(.*?)fin encabezado principal/gs, "<h1>$1</h1>")
+      .replace(/encabezado secundario\s*(.*?)fin encabezado secundario/gs, "<h2>$1</h2>")
+      .replace(/encabezado nivel (\d)\s*(.*?)fin encabezado nivel \1/gs, "<h$1>$2</h$1>")
+      .replace(/parrafo\s*(.*?)fin parrafo/gs, "<p>$1</p>")
+      .replace(/texto en negrita\s*(.*?)fin texto en negrita/gs, "<strong>$1</strong>")
+      .replace(/texto en cursiva\s*(.*?)fin texto en cursiva/gs, "<em>$1</em>")
+      .replace(/texto subrayado\s*(.*?)fin texto subrayado/gs, "<u>$1</u>")
+      .replace(/salto de línea/g, "<br>")
+      .replace(/línea horizontal/g, "<hr>")
+      .replace(/enlace\s*(?:a\s*"(.*?)")?\s*(?:clase\s*"(.*?)")?\s*(.*?)fin enlace/gs, (match, href, p2, p3) => {
+        let attrs = '';
+        if (href) attrs += ` href="${href}"`;
+        if (p2) attrs += ` class="${p2}"`;
+        return `<a${attrs}>${p3}</a>`;
+      })
+      .replace(/imagen fuente\s*"(.*?)"(?:\s*alt\s*"(.*?)")?/g, "<img src=\"$1\" alt=\"$2\">")
+      .replace(/lista desordenada\s*(.*?)fin lista desordenada/gs, "<ul>$1</ul>")
+      .replace(/lista ordenada\s*(.*?)fin lista ordenada/gs, "<ol>$1</ol>")
+      .replace(/elemento de lista\s*(.*?)fin elemento de lista/gs, "<li>$1</li>")
+      .replace(/formulario\s*(.*?)fin formulario/gs, "<form>$1</form>")
+      .replace(/entrada de texto\s*(?:id\s*"(.*?)"\s*)?(?:nombre\s*"(.*?)"\s*)?(?:placeholder\s*"(.*?)"\s*)?/g, "<input type=\"text\" id=\"$1\" name=\"$2\" placeholder=\"$3\">")
+      .replace(/entrada de contraseña\s*(?:id\s*"(.*?)"\s*)?(?:nombre\s*"(.*?)"\s*)?/g, "<input type=\"password\" id=\"$1\" name=\"$2\">")
+      .replace(/entrada de checkbox\s*(?:id\s*"(.*?)"\s*)?(?:nombre\s*"(.*?)"\s*)?/g, "<input type=\"checkbox\" id=\"$1\" name=\"$2\">")
+      .replace(/entrada de radio\s*(?:id\s*"(.*?)"\s*)?(?:nombre\s*"(.*?)"\s*)?/g, "<input type=\"radio\" id=\"$1\" name=\"$2\">")
+      .replace(/área de texto\s*(?:id\s*"(.*?)"\s*)?(?:nombre\s*"(.*?)"\s*)?(?:filas\s*"(.*?)"\s*)?(?:columnas\s*"(.*?)"\s*)?(.*?)fin área de texto/gs, "<textarea id=\"$1\" name=\"$2\" rows=\"$3\" cols=\"$4\">$5</textarea>")
+      .replace(/botón de envío\s*(?:valor\s*"(.*?)"\s*)?/g, "<input type=\"submit\" value=\"$1\">")
+      .replace(/etiqueta\s*(.*?)fin etiqueta/gs, "<label>$1</label>")
+      .replace(/seleccion\s*(?:nombre\s*"(.*?)")?\s*(.*?)fin seleccion/gs, (match, p1, p2) => `<select name="${p1}">${p2}</select>`)
+      .replace(/opcion\s*(?:valor\s*"(.*?)")?\s*(.*?)fin opcion/gs, (match, p1, p2) => `<option value="${p1}">${p2}</option>`)
+      .replace(/video fuente\s*"(.*?)"\s*(?:tipo\s*"(.*?)"\s*)?/g, "<video src=\"$1\" type=\"$2\" controls>")
+      .replace(/audio fuente\s*"(.*?)"\s*(?:tipo\s*"(.*?)"\s*)?/g, "<audio src=\"$1\" type=\"$2\" controls>")
+      .replace(/\bestilo\s*"(.*?)"/g, "style=\"$1\"")
+      // Nuevas etiquetas
+      .replace(/lista de definición\s*(.*?)fin lista de definición/gs, "<dl>$1</dl>")
+      .replace(/término de definición\s*(.*?)fin término de definición/gs, "<dt>$1</dt>")
+      .replace(/descripción de definición\s*(.*?)fin descripción de definición/gs, "<dd>$1</dd>")
+      .replace(/fragmento de código\s*(.*?)fin fragmento de código/gs, "<code>$1</code>")
+      .replace(/cuerpo principal\s*(.*?)fin cuerpo principal/gs, "<main>$1</main>")
+      .replace(/encabezado de tabla\s*(.*?)fin encabezado de tabla/gs, "<thead>$1</thead>")
+      .replace(/cuerpo de tabla\s*(.*?)fin cuerpo de tabla/gs, "<tbody>$1</tbody>")
+      .replace(/fila de tabla\s*(.*?)fin fila de tabla/gs, "<tr>$1</tr>")
+      .replace(/celda de tabla\s*(.*?)fin celda de tabla/gs, "<td>$1</td>")
+      .replace(/título de tabla\s*(.*?)fin título de tabla/gs, "<th>$1</th>");
+  } catch (error) {
+    console.error("Error en traducirHTML:", error);
+    return texto;
+  }
+}
+
+
+// ====================
+// Traductor de CSS mejorado
+// ====================
+function traducirCSS(texto) {
+  if (!texto || typeof texto !== "string") return "";
+
+  try {
+    const propiedades = {
+      "color de fondo": "background-color", "imagen de fondo": "background-image", "repetir fondo": "background-repeat",
+      "posición de fondo": "background-position", "tamaño de fondo": "background-size", "fondo": "background",
+      "color de texto": "color", "tamaño de fuente": "font-size", "tipo de letra": "font-family",
+      "negrita": "font-weight", "cursiva": "font-style", "subrayado": "text-decoration",
+      "alinear texto": "text-align", "espaciado de letras": "letter-spacing", "espaciado de líneas": "line-height",
+      "margen": "margin", "margen superior": "margin-top", "margen inferior": "margin-bottom",
+      "margen izquierdo": "margin-left", "margen derecho": "margin-right",
+      "relleno": "padding", "relleno superior": "padding-top", "relleno inferior": "padding-bottom",
+      "relleno izquierdo": "padding-left", "relleno derecho": "padding-right",
+      "borde": "border", "radio de borde": "border-radius", "sombra de caja": "box-shadow",
+      "ancho": "width", "alto": "height", "posición": "position", "arriba": "top", "abajo": "bottom",
+      "izquierda": "left", "derecha": "right", "profundidad": "z-index", "ancho máximo": "max-width",
+      "alto máximo": "max-height", "ancho mínimo": "min-width", "alto mínimo": "min-height",
+      "mostrar como": "display", "alinear horizontal": "justify-content", "alinear vertical": "align-items",
+      "dirección de flex": "flex-direction", "espacio entre elementos": "gap", "envolver flex": "flex-wrap",
+      "columnas de grilla": "grid-template-columns", "filas de grilla": "grid-template-rows",
+      "transición": "transition", "animación": "animation", "transformar": "transform",
+      "rotar": "rotate", "escalar": "scale", "trasladar": "translate", "opacidad": "opacity",
+      "cursor": "cursor", "desbordamiento": "overflow", "visibilidad": "visibility",
+      "borde colapsado": "border-collapse", "alinear contenido": "align-content", "alinear elementos": "align-items",
+      "justificar contenido": "justify-content", "fuente": "font",
+      // Nuevas propiedades
+      "distribuir elementos": "justify-content",
+      "dirección de columna": "flex-direction: column",
+      "dirección de fila": "flex-direction: row",
+      "modo de visualización": "display",
+      "margen automático": "margin: auto",
+      "ancho al 100 por ciento": "width: 100%",
+      "alto al 100 por ciento": "height: 100%",
+      "posición absoluta": "position: absolute",
+      "posición relativa": "position: relative",
+      "posición fija": "position: fixed",
+    };
+    const colores = {
+      rojo: "red", verde: "green", azul: "blue", negro: "black", blanco: "white", gris: "gray", amarillo: "yellow",
+      naranja: "orange", morado: "purple", celeste: "lightblue", rosa: "pink", marrón: "brown", violeta: "violet",
+      plateado: "silver", dorado: "gold", lima: "lime", aqua: "aqua", fucsia: "fuchsia", oliva: "olive"
+    };
+    const unidades = {
+      píxel: "px", píxeles: "px", por_ciento: "%", rem: "rem", em: "em", vista_altura: "vh", vista_ancho: "vw"
+    };
+    const pseudoClases = {
+      "al pasar": ":hover", "activo": ":active", "enfocado": ":focus", "visitado": ":visited", "antes": "::before", "después": "::after"
+    };
+    const valores = {
+        "flex": "flex",
+        "grilla": "grid",
+        "bloque": "block",
+        "en línea": "inline",
+        "en línea-bloque": "inline-block",
+        "oculto": "hidden"
+    };
+
+    // Selectores
+    texto = texto.replace(/estilo para\s*(.*?)\s*{/g, "$1 {")
+                 .replace(/clase\s*"(.*?)"\s*{/g, ".$1 {")
+                 .replace(/id\s*"(.*?)"\s*{/g, "#$1 {");
+
+    // Media Queries
+    texto = texto.replace(/media en ancho máximo\s*(\d+)\s*píxel(es)?\s*{/g, "@media (max-width: $1px) {")
+                 .replace(/media en ancho mínimo\s*(\d+)\s*píxel(es)?\s*{/g, "@media (min-width: $1px) {")
+                 .replace(/media en alto máximo\s*(\d+)\s*píxel(es)?\s*{/g, "@media (max-height: $1px) {")
+                 .replace(/media en alto mínimo\s*(\d+)\s*píxel(es)?\s*{/g, "@media (min-height: $1px) {");
+
+    // Pseudo-clases y elementos
+    for (let p in pseudoClases) {
+      texto = texto.replace(new RegExp(":" + p, "g"), pseudoClases[p]);
+    }
+
+    // Propiedades dinámicas
+    for (let prop in propiedades) {
+      let regex = new RegExp(prop + "\\s*:\\s*(.*?);", "gi");
+      texto = texto.replace(regex, propiedades[prop] + ": $1;");
+    }
+
+    // Colores dinámicos
+    for (let c in colores) {
+      let regex = new RegExp("\\b" + c + "\\b", "gi");
+      texto = texto.replace(regex, colores[c]);
+    }
+
+    // Unidades
+    for (let u in unidades) {
+      let regex = new RegExp("(\\d+)\\s*" + u, "gi");
+      texto = texto.replace(regex, `$1${unidades[u]}`);
+    }
+
+    // Casos especiales
+    texto = texto.replace(/negrita\s*:\s*sí;/g, "font-weight: bold;")
+                 .replace(/cursiva\s*:\s*sí;/g, "font-style: italic;")
+                 .replace(/subrayado\s*:\s*sí;/g, "text-decoration: underline;")
+                 .replace(/centrar texto;?/g, "text-align: center;");
+    
+    // Traducción de valores
+    texto = texto.replace(/\bcentrado\b/g, "center")
+                 .replace(/\bizquierda\b/g, "left")
+                 .replace(/\bderecha\b/g, "right")
+                 .replace(/\bcentrar\b/g, "center");
+    
+    // Nuevos valores
+    for (let val in valores) {
+        let regex = new RegExp("\\b" + val + "\\b", "gi");
+        texto = texto.replace(regex, valores[val]);
+    }
+  
+    return texto;
+  } catch (error) {
+    console.error("Error en traducirCSS:", error);
+    return texto;
+  }
+}
+
+
+// ====================
+// Traductor de JS mejorado
+// ====================
+function traducirJS(texto) {
+  if (!texto || typeof texto !== "string") return "";
+
+  try {
+    texto = texto
+      .replace(/\bvariable\b/g, "let")
+      .replace(/\bconstante\b/g, "const")
+      .replace(/\bfunción\b/g, "function")
+      .replace(/\bretornar\b/g, "return")
+      .replace(/\bclase\b/g, "class")
+      .replace(/\bconstructor\b/g, "constructor")
+      .replace(/\bextiende\b/g, "extends")
+      .replace(/\bsuperclase\b/g, "super")
+      .replace(/\basincrónico\b/g, "async")
+      .replace(/\besperar\b/g, "await")
+      .replace(/\bpromesa\b/g, "Promise")
+      .replace(/\bresolver\b/g, "resolve")
+      .replace(/\brechazar\b/g, "reject")
+      .replace(/\bentonces\b/g, "then")
+      .replace(/\bcatch\b/g, "catch")
+      .replace(/\bfinalmente\b/g, "finally")
+      .replace(/\bsi\s*\(/g, "if(")
+      .replace(/\bsino si\s*\(/g, "else if(")
+      .replace(/\bsino\b/g, "else")
+      .replace(/\bpara cada\b/g, "forEach")
+      .replace(/\bpara\b/g, "for")
+      .replace(/\bmientras\b/g, "while")
+      .replace(/\bhacer\b/g, "do")
+      .replace(/\bverdadero\b/g, "true")
+      .replace(/\bfalso\b/g, "false")
+      .replace(/\bnulo\b/g, "null")
+      .replace(/\bindefinido\b/g, "undefined")
+      .replace(/\by\b/g, "&&")
+      .replace(/\bo\b/g, "||")
+      .replace(/\bno\s+/g, "!")
+      .replace(/\bdocumento\b/g, "document")
+      .replace(/\bventana\b/g, "window")
+      .replace(/\bconsola\b/g, "console")
+      .replace(/\bescribir\(/g, "console.log(")
+      .replace(/\balerta\(/g, "alert(")
+      .replace(/\bseleccionarPorId\(/g, "getElementById(")
+      .replace(/\bseleccionarPorClase\(/g, "getElementsByClassName(")
+      .replace(/\bseleccionar\(/g, "querySelector(")
+      .replace(/\bseleccionarTodo\(/g, "querySelectorAll(")
+      .replace(/\bagregarEvento\(/g, "addEventListener(")
+      .replace(/\bremoverEvento\(/g, "removeEventListener(")
+      .replace(/\blongitud\b/g, "length")
+      .replace(/\bincluir\b/g, "includes")
+      .replace(/\bempiezaCon\b/g, "startsWith")
+      .replace(/\bterminaCon\b/g, "endsWith")
+      .replace(/\bdividir\b/g, "split")
+      .replace(/\bunir\b/g, "join")
+      .replace(/\bempalmar\b/g, "splice")
+      .replace(/\bslicear\b/g, "slice")
+      .replace(/\bmapear\b/g, "map")
+      .replace(/\bfiltrar\b/g, "filter")
+      .replace(/\breducir\b/g, "reduce")
+      .replace(/\bencontrar\b/g, "find")
+      .replace(/\bordenar\b/g, "sort")
+      .replace(/\bagregar\b/g, "push")
+      .replace(/\bquitar\b/g, "pop")
+      .replace(/\bdesplazar\b/g, "shift")
+      .replace(/\bno es un número\b/g, "isNaN")
+      // Nuevas funciones y lógica
+      .replace(/\bagregar elemento\b/g, "appendChild")
+      .replace(/\bremover elemento\b/g, "removeChild")
+      .replace(/\bcrear elemento\b/g, "createElement")
+      .replace(/\bobtener por id\b/g, "getElementById")
+      .replace(/\bobtener por clase\b/g, "getElementsByClassName")
+      .replace(/\btexto interior\b/g, "innerText")
+      .replace(/\bhtml interior\b/g, "innerHTML")
+      .replace(/\bvalor\b/g, "value")
+      .replace(/\blista de clases\b/g, "classList")
+      .replace(/\bagregar clase\b/g, "add")
+      .replace(/\bremover clase\b/g, "remove")
+      .replace(/\balternar clase\b/g, "toggle")
+      .replace(/\bcontiene clase\b/g, "contains");
+
+    // Operadores
+    texto = texto
+      .replace(/\bes igual a\b/g, "==")
+      .replace(/\bes estrictamente igual a\b/g, "===")
+      .replace(/\bes diferente a\b/g, "!=")
+      .replace(/\bes estrictamente diferente a\b/g, "!==")
+      .replace(/\bes menor que\b/g, "<")
+      .replace(/\bes mayor que\b/g, ">")
+      .replace(/\bes menor o igual que\b/g, "<=")
+      .replace(/\bes mayor o igual que\b/g, ">=");
+
+
+
+    return texto;
+  } catch (error) {
+    console.error("Error en traducirJS:", error);
+    return texto;
+  }
+}
+
+
+// ====================
+// Lógica del Editor
+// ====================
+let htmlBorrador, cssBorrador, jsBorrador;
+let htmlEditor, cssEditor, jsEditor;
+
+// Inicializar CodeMirror para los borradores
+function inicializarEditores() {
+  htmlBorrador = CodeMirror.fromTextArea(document.getElementById("borradorHtml"), {
+    mode: "xml",
+    theme: "monokai",
+    lineNumbers: true,
+    lineWrapping: true
+  });
+  cssBorrador = CodeMirror.fromTextArea(document.getElementById("borradorCss"), {
+    mode: "css",
+    theme: "monokai",
+    lineNumbers: true,
+    lineWrapping: true
+  });
+  jsBorrador = CodeMirror.fromTextArea(document.getElementById("borradorJs"), {
+    mode: "javascript",
+    theme: "monokai",
+    lineNumbers: true,
+    lineWrapping: true
+  });
+
+  // Inicializar editores de código traducido
+  htmlEditor = CodeMirror.fromTextArea(document.getElementById("htmlCode"), {
+    mode: "xml",
+    theme: "monokai",
+    lineNumbers: true,
+    readOnly: true,
+    lineWrapping: true
+  });
+  cssEditor = CodeMirror.fromTextArea(document.getElementById("cssCode"), {
+    mode: "css",
+    theme: "monokai",
+    lineNumbers: true,
+    readOnly: true,
+    lineWrapping: true
+  });
+  jsEditor = CodeMirror.fromTextArea(document.getElementById("jsCode"), {
+    mode: "javascript",
+    theme: "monokai",
+    lineNumbers: true,
+    readOnly: true,
+    lineWrapping: true
+  });
+  
+  // Añadir eventos para actualizar la vista previa
+  htmlBorrador.on("change", () => transcribir('html'));
+  cssBorrador.on("change", () => transcribir('css'));
+  jsBorrador.on("change", () => transcribir('js'));
+  
+  // Actualizar la vista previa inicial
+  setTimeout(updatePreview, 100);
+}
+
+function transcribir(lenguaje) {
+  let borrador, editor, traducido;
+
+  if (lenguaje === 'html') {
+    borrador = htmlBorrador.getValue();
+    editor = htmlEditor;
+    traducido = traducirHTML(borrador);
+  } else if (lenguaje === 'css') {
+    borrador = cssBorrador.getValue();
+    editor = cssEditor;
+    traducido = traducirCSS(borrador);
+  } else if (lenguaje === 'js') {
+    borrador = jsBorrador.getValue();
+    editor = jsEditor;
+    traducido = traducirJS(borrador);
+  }
+
+  editor.setValue(traducido);
+  updatePreview();
+}
+
+function updatePreview() {
+  const html = htmlEditor.getValue();
+  const css = cssEditor.getValue();
+  const js = jsEditor.getValue();
+
+  const iframe = document.getElementById("preview");
+  const doc = iframe.contentDocument || iframe.contentWindow.document;
+
+  const fullContent = `
+    <!DOCTYPE html>
+    <html lang="es">
+      <head>
+        <meta charset="UTF-8">
+        <style>${css}</style>
+      </head>
+      <body>
+        ${html}
+        <script type="text/javascript">${js}<\/script>
+      </body>
+    </html>
+  `;
+
+  doc.open();
+  doc.write(fullContent);
+  doc.close();
+}
+
+function limpiarBorrador(lenguaje) {
+  if (lenguaje === 'html') htmlBorrador.setValue('');
+  else if (lenguaje === 'css') cssBorrador.setValue('');
+  else if (lenguaje === 'js') jsBorrador.setValue('');
+  transcribir(lenguaje);
+}
+
+function limpiarEditores() {
+  htmlBorrador.setValue('');
+  cssBorrador.setValue('');
+  jsBorrador.setValue('');
+  htmlEditor.setValue('');
+  cssEditor.setValue('');
+  jsEditor.setValue('');
+  updatePreview();
+}
+
+function copiarAlPortapapeles(lenguaje) {
+  let editor;
+  if (lenguaje === 'html') editor = htmlEditor;
+  else if (lenguaje === 'css') editor = cssEditor;
+  else if (lenguaje === 'js') editor = jsEditor;
+  
+  const texto = editor.getValue();
+  navigator.clipboard.writeText(texto)
+    .then(() => {
+      let card = document.getElementById("copiadoCard");
+      card.innerText = "✅ Copiado al portapapeles";
+      card.classList.add("show");
+      setTimeout(() => { card.classList.remove("show"); }, 2000);
+    })
+    .catch(err => console.error("Error al copiar:", err));
+}
+
+function guardarCodigo() {
+  if(htmlBorrador) localStorage.setItem('borradorHtml', htmlBorrador.getValue());
+  if(cssBorrador) localStorage.setItem('borradorCss', cssBorrador.getValue());
+  if(jsBorrador) localStorage.setItem('borradorJs', jsBorrador.getValue());
+}
+
+function cargarCodigo() {
+  if (localStorage.getItem('borradorHtml')) {
+    htmlBorrador.setValue(localStorage.getItem('borradorHtml'));
+    transcribir('html');
+  }
+  if (localStorage.getItem('borradorCss')) {
+    cssBorrador.setValue(localStorage.getItem('borradorCss'));
+    transcribir('css');
+  }
+  if (localStorage.getItem('borradorJs')) {
+    jsBorrador.setValue(localStorage.getItem('borradorJs'));
+    transcribir('js');
+  }
+}
+
+function toggleTheme() {
+  document.body.classList.toggle("light-theme");
+  const newTheme = document.body.classList.contains('light-theme') ? 'default' : 'monokai';
+  htmlBorrador.setOption('theme', newTheme);
+  cssBorrador.setOption('theme', newTheme);
+  jsBorrador.setOption('theme', newTheme);
+  htmlEditor.setOption('theme', newTheme);
+  cssEditor.setOption('theme', newTheme);
+  jsEditor.setOption('theme', newTheme);
+}
+
+// FUNCION DE GUARDAR PROYECTO CORREGIDA
+function guardarProyecto() {
+  const zip = new JSZip();
+  
+  const htmlContent = htmlEditor.getValue();
+  const cssContent = cssEditor.getValue();
+  const jsContent = jsEditor.getValue();
+
+  const finalHtml = `
+  <!DOCTYPE html>
+  <html lang="es">
+    <head>
+      <meta charset="UTF-8">
+      <title>Mi Proyecto</title>
+      <style>
+        ${cssContent}
+      </style>
+    </head>
+    <body>
+      ${htmlContent}
+      <script type="text/javascript">${jsContent}<\/script>
+    </body>
+  </html>
+  `;
+
+  zip.file("index.html", finalHtml);
+  zip.file("styles.css", cssContent); 
+  zip.file("script.js", jsContent);
+
+  zip.generateAsync({type:"blob"})
+     .then(function(content) {
+        // Enlaza el blob al enlace de descarga
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(content);
+        link.download = 'proyecto_codelatino.zip';
+
+        // Dispara la descarga sin añadir el enlace al DOM
+        // Esto previene que la página se recargue o navegue
+        link.click();
+        
+        // Limpia la URL del objeto después de la descarga
+        setTimeout(() => URL.revokeObjectURL(link.href), 1000);
+        
+        mostrarNotificacion("Proyecto guardado y descargado");
+     })
+     .catch(err => {
+        console.error("Error al generar el archivo ZIP:", err);
+        mostrarNotificacion("❌ Error al guardar el proyecto");
+     });
+}
+
+function mostrarNotificacion(mensaje) {
+    let card = document.getElementById("copiadoCard");
+    card.innerText = mensaje;
+    card.classList.add("show");
+    setTimeout(() => { card.classList.remove("show"); }, 2000);
+}
+
+window.onload = function() {
+  inicializarEditores();
+  cargarCodigo();
+};
+
+setInterval(guardarCodigo, 2000);
+
+  </script>
+</body>
+</html>
