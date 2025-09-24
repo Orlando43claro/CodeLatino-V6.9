@@ -1,335 +1,798 @@
 <!DOCTYPE html>
-<head><title>developer</title>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeLatino Editor - Editor Web en Español</title>
+    <link rel="icon" type="image/png" href="https://i.ibb.co/q3QTKY7n/1758716704508.png">
+    <style>
+        :root {
+            --primary-color: #00b894;
+            --primary-dark: #019875;
+            --secondary-color: #6c5ce7;
+            --accent-color: #00ffd0;
+            --dark-bg: #121212;
+            --dark-card: #1e1e1e;
+            --dark-border: #333;
+            --text-light: #f0f0f0;
+            --text-gray: #b0b0b0;
+        }
 
-<style>
-*{padding: 0;
-margin: 0px;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-}
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-light);
+            line-height: 1.6;
+        }
 
-body{width:100%; height: 100%; background: #ffffff;}
-  
- .section01{margin: 2px;  height: 150px; width:80%; }
-.section01 img{ height: 12px; float: right;} 
-  
-.container{ text-align: center; margin: 2px;
-height: 120px; width:100%;}
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
 
-#section1{ text-align: center; margin: 15px;
-width:100px; height: 100px; float: right; }
-#section1 img{   border-radius: 10px;  text-align: center;}
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--dark-card) 0%, #1a1a2e 100%);
+            border-bottom: 2px solid var(--primary-color);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
 
-  
-#section2{margin: 10px;
-width:59%; height: 98px;}
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
 
-#section3 {border: 1px solid black;
-width:59%; height: 40px; display: flex;  }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
-.nav{width:100%; height: 30px; text-align: center;}
+        .logo img {
+            height: 40px;
+            width: auto;
+        }
 
-.nav a{display: block; text-decoration: none;
-    font-size: 16px; /* Tama帽o de letra */
-    text-transform: uppercase; /* Letras en may煤scula */
-    background: #6B3618; /* Color de fondo */
-    padding: 10px 15px; /* Relleno */
-    margin: 10px;
-    color: #FFD059; /* Color de texto */
-    border-bottom: solid 2px #FFD059; /* Borde inferior */
-    border-radius: 10px; color: #ffffff;  }
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
 
-  #section03{
-width:100%; height: 49px; display: flex;}
-#section08{ width:10%;}
-  
-#section04{ width:50%; height: 49px; padding: 2px; 49px; float: right; margin: 5px; text-align: center;}
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
 
-#section05{width:50%; height: 49px; float: right; margin: 10px; text-align: center;}
-#section05 a{display: block; text-decoration: none;
-    font-size: 14px; /* Tama帽o de letra */
-    text-transform: uppercase; /* Letras en may煤scula */
-    background: #6B3618; /* Color de fondo */
-    padding: 10px 15px; /* Relleno */
-    margin: 1px;
-    color: #FFD059; /* Color de texto */
-    border-bottom: solid 2px #FFD059; /* Borde inferior */
-    border-radius: 10px; color: #ffffff;  }
+        .nav-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
 
-  
-.main{   width:100%;  max-height: 220px;  display: flex; overflow-x: auto;}
-#section6 img{ border: 1px solid black; border-radius: 10px; height: 200px; width: 130px;  display: flex;}
-#section6{ margin: 5px; border-radius: 10px;  display: flex;}
-#section66 img{ border: 1px solid black; border-radius: 10px; height: 200px; width: 300px;  display: flex;}
-#section66{ margin: 5px; border-radius: 10px;  display: flex;}
-#section6 video{ border: 1px solid black; border-radius: 10px; height: 200px; width: 300px;  display: flex;}
+        .nav-links a:hover {
+            color: var(--accent-color);
+        }
 
-.footer{ width:90%; height: 100%; margin: 5px;  }
-p{padding: 10px; }
-  
-.version{ width:90%; height: 40px; }
-   
- 
+        .cta-button {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
 
-header1{display: flex; width:100%;}
+        .cta-button:hover {
+            background: var(--primary-dark);
+        }
 
-.logo1{ padding: 15px; width:10px;}
-.log1 { height 30px; width:30px; }
-.log1 img{  height: 30px; width:30px;}
+        /* Hero Section */
+        .hero {
+            padding: 150px 0 100px;
+            text-align: center;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        }
 
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, var(--accent-color), var(--primary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
-.nombre1{ padding: 20px; height 30px; width:100%;}
-.nombre1 p{font-size: 12px; }
-  
-  header{ display: flex; height 60px; width:100%;}
+        .hero p {
+            font-size: 1.3rem;
+            color: var(--text-gray);
+            max-width: 700px;
+            margin: 0 auto 30px;
+        }
 
-.logo{ padding: 15px; width:70px;}
-.log {height 60px; width:60px; text-align: center;}
-.log img{border:1px solid black; border-radius: 10px; height: 60px; width:60px;}
+        .hero-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
 
-.nombre{height 50px; width:100%;}
-.nombre p{font-size: 12px; }
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
 
-  
-</style>
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-light);
+            padding: 12px 25px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            border: 2px solid var(--primary-color);
+            transition: all 0.3s;
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-android {
+            background: #3ddc84;
+            color: #0d3b2a;
+            padding: 12px 25px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-android:hover {
+            background: #2bc473;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 100px 0;
+            background: var(--dark-bg);
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--accent-color);
+            margin-bottom: 15px;
+        }
+
+        .section-title p {
+            color: var(--text-gray);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-card {
+            background: var(--dark-card);
+            border-radius: 10px;
+            padding: 30px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid var(--dark-border);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--accent-color);
+        }
+
+        /* How It Works */
+        .how-it-works {
+            padding: 100px 0;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        }
+
+        .steps {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 50px;
+            position: relative;
+        }
+
+        .steps::before {
+            content: '';
+            position: absolute;
+            top: 40px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--primary-color);
+            z-index: 1;
+        }
+
+        .step {
+            text-align: center;
+            position: relative;
+            z-index: 2;
+            flex: 1;
+        }
+
+        .step-number {
+            width: 80px;
+            height: 80px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 0 auto 20px;
+            border: 5px solid var(--dark-bg);
+        }
+
+        .step h3 {
+            margin-bottom: 10px;
+            color: var(--accent-color);
+        }
+
+        .step p {
+            color: var(--text-gray);
+            max-width: 250px;
+            margin: 0 auto;
+        }
+
+        /* Languages Section */
+        .languages {
+            padding: 100px 0;
+            background: var(--dark-bg);
+        }
+
+        .languages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .language-card {
+            background: var(--dark-card);
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            border: 1px solid var(--dark-border);
+        }
+
+        .language-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--accent-color);
+        }
+
+        .language-example {
+            background: #252525;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 15px;
+            text-align: left;
+            font-family: monospace;
+            border-left: 3px solid var(--primary-color);
+        }
+
+        /* App Download Section */
+        .app-download {
+            padding: 100px 0;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            text-align: center;
+        }
+
+        .app-content {
+            display: flex;
+            align-items: center;
+            gap: 50px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .app-image {
+            flex: 1;
+            text-align: center;
+        }
+
+        .app-image img {
+            max-width: 300px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .app-info {
+            flex: 1;
+            text-align: left;
+        }
+
+        .app-info h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: var(--accent-color);
+        }
+
+        .app-features {
+            list-style: none;
+            margin: 20px 0;
+        }
+
+        .app-features li {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .app-features li::before {
+            content: "✓";
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 100px 0;
+            background: var(--dark-bg);
+            text-align: center;
+        }
+
+        .cta-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: var(--accent-color);
+        }
+
+        .cta-section p {
+            color: var(--text-gray);
+            max-width: 600px;
+            margin: 0 auto 30px;
+            font-size: 1.1rem;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark-card);
+            padding: 50px 0 20px;
+            border-top: 1px solid var(--dark-border);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-column h3 {
+            color: var(--accent-color);
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-column ul li a {
+            color: var(--text-gray);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-column ul li a:hover {
+            color: var(--accent-color);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid var(--dark-border);
+            color: var(--text-gray);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .steps {
+                flex-direction: column;
+                gap: 40px;
+            }
+
+            .steps::before {
+                display: none;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn-primary, .btn-secondary, .btn-android {
+                width: 250px;
+                text-align: center;
+                justify-content: center;
+            }
+
+            .app-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .app-info {
+                text-align: center;
+            }
+        }
+    </style>
 </head>
 <body>
-  
-  
-<div class="container">
-  
-<section id="section1"><img src="1.webp" width="80"  height="80">
-</section>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="nav-container">
+                <div class="logo">
+                    <img src="https://i.ibb.co/q3QTKY7n/1758716704508.png" alt="CodeLatino Editor">
+                    <span class="logo-text">CodeLatino Editor</span>
+                </div>
+                <nav class="nav-links">
+                    <a href="#features">Características</a>
+                    <a href="#how-it-works">Cómo Funciona</a>
+                    <a href="#languages">Lenguajes</a>
+                    <a href="#app">App Android</a>
+                    <a href="#references">Guías</a>
+                </nav>
+                <a href="editor.html" class="cta-button">Usar Editor</a>
+            </div>
+        </div>
+    </header>
 
-<section id="section2">
-<center><font size="4"><b>AudioLibros</b></font><br> 
-<font size="3" color="green"><b>Acceso ilimitado a m谩s de 24.000 libros de audio cl谩sicos</b></font>
-<br> <font size="2">Verificado por <b>Virus Total</b></font></center>
-<font size="2"><b>Versi贸n:  10.14.2(213)  <br>
-Tama帽o:  19.98 MB</b></font>
-</section>
-  
-</div>
-  
-<div class="nav"> 
-<a href=" LibriVox Audio Books_10.14.2_Android-life.apk "  download=" librivoz Android life " ><center>Descargar</center></a>
-</div>
-  
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>Editor Web en Español</h1>
+            <p>CodeLatino es un editor web innovador que te permite escribir código HTML, CSS y JavaScript en español, con traducción automática a sintaxis estándar y vista previa en tiempo real.</p>
+            <div class="hero-buttons">
+                <a href="editor.html" class="btn-primary">Comenzar a Programar</a>
+                <a href="#app" class="btn-android">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M17.523 15.3414c-.5511 0-.9993-.4482-.9993-.9993s.4482-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993s-.4482.9993-.9993.9993m-5.012 0c-.5511 0-.9993-.4482-.9993-.9993s.4482-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993s-.4482.9993-.9993.9993m2.506 2.2677c.553 0 1.001.448 1.001 1.001s-.448 1.001-1.001 1.001-1.001-.448-1.001-1.001.448-1.001 1.001-1.001m-.0095-12.2935c1.6837 0 3.0485 1.3648 3.0485 3.0485s-1.3648 3.0485-3.0485 3.0485-3.0485-1.3648-3.0485-3.0485 1.3648-3.0485 3.0485-3.0485"/>
+                        <path d="M11.999 1.019c-2.823 0-5.118 2.295-5.118 5.118 0 2.823 2.295 5.118 5.118 5.118s5.118-2.295 5.118-5.118c0-2.823-2.295-5.118-5.118-5.118m10.881 10.881c0 5.999-4.882 10.881-10.881 10.881s-10.881-4.882-10.881-10.881 4.882-10.881 10.881-10.881 10.881 4.882 10.881 10.881"/>
+                    </svg>
+                    Descargar App Android
+                </a>
+                <a href="#features" class="btn-secondary">Ver Características</a>
+            </div>
+        </div>
+    </section>
 
-  
-<section id="section03">
-<div id="section08">
-</div>
-<div id="section04"><div class="rw-ui-container"></div>
-</div>
-<div id="section05"><a href="#comentarios" ><center>Comentarios</center></a> 
-</div>
-</section>
-  
-<div class="main">
-<section id="section6">
-<img src="0.webp" >
-</section>
-<section id="section6">
-<img src="2.webp">
-</section>
-<section id="section6">
-<img src="3.webp"  >
-</section>
-<section id="section6">
-<img src="4.webp" >
-</section>
-<section id="section6">
-<img src="5.webp"  >
-</section>
-<section id="section6">
-<img src="6.webp" >
-</section>
-<section id="section6">
-<img src="7.webp" >
-</section>
-<section id="section6">
-<img src="8.webp" >
-</section>
-</div>
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-title">
+                <h2>Características Principales</h2>
+                <p>Descubre todo lo que hace especial a CodeLatino Editor</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🌐</div>
+                    <h3>Traducción en Tiempo Real</h3>
+                    <p>Escribe código en español y ve cómo se traduce instantáneamente a HTML, CSS y JavaScript estándar.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">👁️</div>
+                    <h3>Vista Previa Instantánea</h3>
+                    <p>Observa los cambios en tu código reflejados inmediatamente en la vista previa integrada.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💾</div>
+                    <h3>Auto-Guardado</h3>
+                    <p>Tu trabajo se guarda automáticamente cada 2 segundos, nunca perderás tu progreso.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📁</div>
+                    <h3>Exportación de Proyectos</h3>
+                    <p>Descarga tu proyecto completo en un archivo ZIP listo para usar.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎨</div>
+                    <h3>Temas Personalizables</h3>
+                    <p>Cambia entre tema oscuro y claro según tus preferencias.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📚</div>
+                    <h3>Guías de Referencia</h3>
+                    <p>Accede a documentación completa de HTML, CSS y JavaScript en español.</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<div class="footer">
-<p><pre>
-<h2>  Descripci贸n:</h2></pre><br>
-El app AudioLibros proporciona acceso gratuito a m谩s de 24.000 audiolibros. Cada audiolibro se puede transmitir a trav茅s de Internet o descargado para su uso posterior. Todos nuestros libros de audio se puede escuchar libremente y compartidas - no hay costo - nunca.<br>
-Nuestra colecci贸n incluye libros de audio cl谩sicos en m谩s de 20 idiomas. El Audio Books aplicaci贸n hace que sea f谩cil de buscar en nuestra colecci贸n de libros de audio libre. Usted puede navegar por t铆tulo, autor o g茅nero, buscar nuevas grabaciones, o buscar palabras clave espec铆ficas. Debido a que los libros son gratis, usted puede escuchar tanto o tan poco de un libro a su gusto sin costo.<br>
-La aplicaci贸n incluye un n煤mero ilimitado de marcadores para realizar un seguimiento de sus momentos favoritos. Recuerda que su posici贸n, por lo que puede empezar a escuchar en el lugar donde se detuvo la 煤ltima. Un temporizador de apagado autom谩tico le permite detener la reproducci贸n despu茅s de un per铆odo determinado de tiempo. Nuestro cat谩logo incluye libros de Leer Escuchando y LibriVox, as铆 como muchas otras colecciones.<br>
-Para ver nuestros libros en la web.<br>
-  visite: http://librivox.bookdesign.biz
-</p>
-</div>
-  
+    <!-- How It Works -->
+    <section class="how-it-works" id="how-it-works">
+        <div class="container">
+            <div class="section-title">
+                <h2>Cómo Funciona</h2>
+                <p>En solo 4 sencillos pasos podrás crear tu página web</p>
+            </div>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Escribe en Español</h3>
+                    <p>Usa sintaxis en español como "parrafo", "color de fondo", "variable"</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Traducción Automática</h3>
+                    <p>CodeLatino convierte tu código a HTML, CSS y JavaScript estándar</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Vista Previa</h3>
+                    <p>Ve los resultados en tiempo real en el panel de vista previa</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h3>Exporta tu Proyecto</h3>
+                    <p>Descarga tu trabajo como archivos HTML, CSS y JS listos para usar</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-
-<div class="footer">
-<p><pre>
-<h4>  Datos del desarrollador</h4></pre>
-</div>
-
-
-<header1>
-<div class="logo1">
-<div class="log1">
-<img src=" desarrollador.png" >
-</div>
-</div>
-<div class="nombre1">
-BookDesign
-</div>
-</header1>
-
-<header1>
-<div class="logo1">
-<div class="log1">
-<img src="email.png">
-</div>
-</div>
-<div class="nombre1">
-support@bookdesign.biz
-</div>
-</header1>
-
-<header1>
-<div class="logo1">
-<div class="log1">
-<a href="https://www.bookdesign.biz/"><img src="web.png" ></a>
-</div>
-</div>
-<div class="nombre1">
-Web
-</div>
-</header1> 
-
-<header1>
-<div class="logo1">
-<div class="log1">
-<a href="https://www.bookdesign.biz/librivox/privacy-policy"><img src="privacidad.png " ></a>
-</div>
-</div>
-<div class="nombre1">
-Politica de privacidad 
-</div>
-</header1>  
-
-<header1>
-<div class="logo1">
-<div class="log1">
-<a href="https://play.google.com/store/apps/details?id=app.librivox.android"><img src="play.jpg " ></a>
-</div>
-</div>
-<div class="nombre1">
-Google Play ID 
-</div>
-</header1>  
-聽 
-<div class="version">
-<pre><h3>聽聽聽聽 Otras Versiones </h3>
-</pre>
-</div> 
-
-<header>
-<div class="logo">
-<div class="log">
-<a href="LibriVox Audio Books_10.14.2_Android-life.apk" download="Books_10.14.2_Android-life" ><img src="1.webp" ></a>
-</div>
-</div>
-<div class="nombre">
-<pre><p>
-Audiolibro
-versi贸n  10.14.2(213)
-tama帽o   19.98 MB
-</p>
-</pre>
-</div>
-</header>  
-
-  
-   <header>
-<div class="logo">
-<div class="log">
-<a href=" LibriVox Audio Books_10.14.1_Android-life.apk " download="Books_10.14.1_Android-life" ><img src="1.webp" ></a>
-</div>
-</div>
-<div class="nombre">
-<pre><p>
-Audiolibro
-versi贸n  10.14.1(211)
-tama帽o   19.98 MB
-</p>
-</pre>
-</div>
-</header>  
-  
-  
-<header>
-<div class="logo">
-<div class="log">
-<a href="AudioLibros_10.9.1_developer-shop.apk" download="AudioLibros_10.9.1_developer-shop" ><img src="1.webp" ></a>
-</div>
-</div>
-<div class="nombre">
-<pre><p>
-Audiolibro
-versi贸n  10.9.1(197)
-tama帽o   16.36 MB
-</p>
-</pre>
-</div>
-</header> 
-  
-  
-
-<div id="comentarios"></div>
-
-  
-  
- <script type="text/javascript">(function(d, t, e, m){
-    
-    // Async Rating-Widget initialization.
-    window.RW_Async_Init = function(){
-                
-        RW.init({
-            huid: "489636",
-            uid: "5b4004c165e23233b1355674625abdce",
-            source: "website",
-            options: {
-                "advanced": {
-                    "layout": {
-                        "align": {
-                            "hor": "center",
-                            "ver": "top"
+    <!-- Languages Section -->
+    <section class="languages" id="languages">
+        <div class="container">
+            <div class="section-title">
+                <h2>Lenguajes Soportados</h2>
+                <p>CodeLatino trabaja con los tres pilares del desarrollo web frontend</p>
+            </div>
+            <div class="languages-grid">
+                <div class="language-card">
+                    <h3>HTML en Español</h3>
+                    <p>Crea la estructura de tu página web usando etiquetas en español</p>
+                    <div class="language-example">
+                        documento<br>
+                        &nbsp;&nbsp;contenido<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;encabezado principal Mi Página fin encabezado principal<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;parrafo Bienvenidos fin parrafo<br>
+                        &nbsp;&nbsp;fin contenido<br>
+                        fin documento
+                    </div>
+                </div>
+                <div class="language-card">
+                    <h3>CSS en Español</h3>
+                    <p>Estiliza tu página con propiedades CSS en español</p>
+                    <div class="language-example">
+                        estilo para cuerpo {<br>
+                        &nbsp;&nbsp;color de texto: blanco;<br>
+                        &nbsp;&nbsp;color de fondo: negro;<br>
+                        &nbsp;&nbsp;tamaño de fuente: 16 píxeles;<br>
                         }
-                    },
-                    "font": {
-                        "size": "14px"
-                    },
-                    "text": {
-                        "rateAwful": "No gusta "
-                    }
-                },
-                "size": "medium",
-                "lng": "es",
-                "style": "oxygen",
-                "isDummy": false
-            } 
+                    </div>
+                </div>
+                <div class="language-card">
+                    <h3>JavaScript en Español</h3>
+                    <p>Añade interactividad con JavaScript en español</p>
+                    <div class="language-example">
+                        variable mensaje = "Hola Mundo";<br>
+                        función mostrarMensaje() {<br>
+                        &nbsp;&nbsp;escribir(mensaje);<br>
+                        }<br>
+                        mostrarMensaje();
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- App Download Section -->
+    <section class="app-download" id="app">
+        <div class="container">
+            <div class="section-title">
+                <h2>App Android</h2>
+                <p>Lleva CodeLatino Editor contigo a todas partes</p>
+            </div>
+            <div class="app-content">
+                <div class="app-image">
+                    <img src="https://i.ibb.co/q3QTKY7n/1758716704508.png" alt="CodeLatino App Android">
+                </div>
+                <div class="app-info">
+                    <h2>Descarga la App Android</h2>
+                    <p>CodeLatino Editor ahora disponible como aplicación nativa para Android. Todas las funciones del editor web en la palma de tu mano.</p>
+                    
+                    <ul class="app-features">
+                        <li>Editor completo con sintaxis en español</li>
+                        <li>Vista previa en tiempo real</li>
+                        <li>Guías de referencia integradas</li>
+                        <li>Exportación de proyectos</li>
+                        <li>Interfaz optimizada para móviles</li>
+                        <li>Funciona sin conexión a internet</li>
+                    </ul>
+                    
+                    <a href="https://www.dropbox.com/scl/fi/a42txsaghi8jigirz5tfl/CodeLatino.apk?rlkey=kr81ql8v8my6jh21cf0h8bby3&st=8lslind9&dl=1" class="btn-android" style="display: inline-flex; margin-top: 20px;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M17.523 15.3414c-.5511 0-.9993-.4482-.9993-.9993s.4482-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993s-.4482.9993-.9993.9993m-5.012 0c-.5511 0-.9993-.4482-.9993-.9993s.4482-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993s-.4482.9993-.9993.9993m2.506 2.2677c.553 0 1.001.448 1.001 1.001s-.448 1.001-1.001 1.001-1.001-.448-1.001-1.001.448-1.001 1.001-1.001m-.0095-12.2935c1.6837 0 3.0485 1.3648 3.0485 3.0485s-1.3648 3.0485-3.0485 3.0485-3.0485-1.3648-3.0485-3.0485 1.3648-3.0485 3.0485-3.0485"/>
+                            <path d="M11.999 1.019c-2.823 0-5.118 2.295-5.118 5.118 0 2.823 2.295 5.118 5.118 5.118s5.118-2.295 5.118-5.118c0-2.823-2.295-5.118-5.118-5.118m10.881 10.881c0 5.999-4.882 10.881-10.881 10.881s-10.881-4.882-10.881-10.881 4.882-10.881 10.881-10.881 10.881 4.882 10.881 10.881"/>
+                        </svg>
+                        Descargar APK (Android)
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- References Section -->
+    <section class="features" id="references">
+        <div class="container">
+            <div class="section-title">
+                <h2>Guías de Referencia</h2>
+                <p>Documentación completa para aprender y consultar</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3>Guía HTML</h3>
+                    <p>Todas las etiquetas HTML disponibles con ejemplos en español</p>
+                    <a href="referencia.html" class="btn-secondary" style="display: inline-block; margin-top: 15px;">Ver Guía HTML</a>
+                </div>
+                <div class="feature-card">
+                    <h3>Guía CSS</h3>
+                    <p>Propiedades y valores CSS traducidos al español</p>
+                    <a href="referencia-css.html" class="btn-secondary" style="display: inline-block; margin-top: 15px;">Ver Guía CSS</a>
+                </div>
+                <div class="feature-card">
+                    <h3>Guía JavaScript</h3>
+                    <p>Funciones y sintaxis de JavaScript en español</p>
+                    <a href="referencia-js.html" class="btn-secondary" style="display: inline-block; margin-top: 15px;">Ver Guía JS</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <h2>¿Listo para comenzar?</h2>
+            <p>Únete a la comunidad de desarrolladores que están aprendiendo a programar en su idioma nativo. CodeLatino hace que el desarrollo web sea accesible para todos.</p>
+            <div class="hero-buttons">
+                <a href="editor.html" class="btn-primary">Usar Editor Web</a>
+                <a href="https://www.dropbox.com/scl/fi/a42txsaghi8jigirz5tfl/CodeLatino.apk?rlkey=kr81ql8v8my6jh21cf0h8bby3&st=8lslind9&dl=1" class="btn-android">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M17.523 15.3414c-.5511 0-.9993-.4482-.9993-.9993s.4482-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993s-.4482.9993-.9993.9993m-5.012 0c-.5511 0-.9993-.4482-.9993-.9993s.4482-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993s-.4482.9993-.9993.9993m2.506 2.2677c.553 0 1.001.448 1.001 1.001s-.448 1.001-1.001 1.001-1.001-.448-1.001-1.001.448-1.001 1.001-1.001m-.0095-12.2935c1.6837 0 3.0485 1.3648 3.0485 3.0485s-1.3648 3.0485-3.0485 3.0485-3.0485-1.3648-3.0485-3.0485 1.3648-3.0485 3.0485-3.0485"/>
+                        <path d="M11.999 1.019c-2.823 0-5.118 2.295-5.118 5.118 0 2.823 2.295 5.118 5.118 5.118s5.118-2.295 5.118-5.118c0-2.823-2.295-5.118-5.118-5.118m10.881 10.881c0 5.999-4.882 10.881-10.881 10.881s-10.881-4.882-10.881-10.881 4.882-10.881 10.881-10.881 10.881 4.882 10.881 10.881"/>
+                    </svg>
+                    Descargar App Android
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>CodeLatino Editor</h3>
+                    <p>El editor web que traduce tu código del español al estándar web. Disponible como aplicación web y app Android.</p>
+                </div>
+                <div class="footer-column">
+                    <h3>Enlaces Rápidos</h3>
+                    <ul>
+                        <li><a href="editor.html">Editor Web</a></li>
+                        <li><a href="#app">App Android</a></li>
+                        <li><a href="referencia.html">Guía HTML</a></li>
+                        <li><a href="referencia-css.html">Guía CSS</a></li>
+                        <li><a href="referencia-js.html">Guía JavaScript</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Características</h3>
+                    <ul>
+                        <li><a href="#features">Traducción en Tiempo Real</a></li>
+                        <li><a href="#features">Vista Previa</a></li>
+                        <li><a href="#features">Auto-Guardado</a></li>
+                        <li><a href="#features">Exportación de Proyectos</a></li>
+                        <li><a href="#app">App Móvil Android</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2024 CodeLatino Editor. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
         });
-        RW.render();
-    };
-        // Append Rating-Widget JavaScript library.
-    var rw, s = d.getElementsByTagName(e)[0], id = "rw-js",
-        l = d.location, ck = "Y" + t.getFullYear() + 
-        "M" + t.getMonth() + "D" + t.getDate(), p = l.protocol,
-        f = ((l.search.indexOf("DBG=") > -1) ? "" : ".min"),
-        a = ("https:" == p ? "secure." + m + "js/" : "js." + m);
-    if (d.getElementById(id)) return;              
-    rw = d.createElement(e);
-    rw.id = id; rw.async = true; rw.type = "text/javascript";
-    rw.src = p + "//" + a + "external" + f + ".js?ck=" + ck;
-    s.parentNode.insertBefore(rw, s);
-    }(document, new Date(), "script", "rating-widget.com/"));</script> 
+
+        // Header background on scroll
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('header');
+            if (window.scrollY > 100) {
+                header.style.background = 'var(--dark-card)';
+                header.style.boxShadow = '0 2px 10px rgba(0,0,0,0.3)';
+            } else {
+                header.style.background = 'linear-gradient(135deg, var(--dark-card) 0%, #1a1a2e 100%)';
+                header.style.boxShadow = 'none';
+            }
+        });
+    </script>
 </body>
 </html>
